@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — QuizChat</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZyIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMyNUQzNjYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMDc1RTU0Ii8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8IS0tIENoYXQgYnViYmxlIHNoYXBlIC0tPgogIDxwYXRoIGQ9Ik0xMCAxMCBRMTAgMTAgOTAgMTAgUTkwIDEwIDkwIDY1IFE5MCA2NSA1NSA2NSBMNDAgODUgTDQwIDY1IFExMCA2NSAxMCA2NSBRMTAgNjUgMTAgMTAgWiIgZmlsbD0idXJsKCNnKSIvPgogIDwhLS0gTGV0dGVyIFEgLS0+CiAgPHRleHQgeD0iNTAiIHk9IjUyIiBmb250LWZhbWlseT0iQXJpYWwgQmxhY2ssIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iOTAwIiBmb250LXNpemU9IjQ0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSI+UTwvdGV4dD4KPC9zdmc+">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#075E54;--pmid:#128C7E;--plight:#25D366;
+  --bg:#F0F4F7;--card:#FFFFFF;--text:#1A2332;--muted:#6B7A8D;--border:#E2E8F0;
+  --danger:#EF4444;--warning:#F59E0B;--info:#3B82F6;
+  --sidebar-w:230px;--sidebar-c:56px;--topbar-h:54px;
+}
+html,body{height:100%}
+body{font-family:'Inter','Amiri',sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column}
+/* Topbar */
+.topbar{height:var(--topbar-h);background:var(--primary);display:flex;align-items:center;padding:0 16px;gap:12px;position:fixed;top:0;left:0;right:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.burger{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,.12);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.burger:hover{background:rgba(255,255,255,.22)}
+.burger svg{fill:white;width:20px;height:20px}
+.topbar-brand{color:#fff;font-size:17px;font-weight:700;display:flex;align-items:center;gap:8px}
+.topbar-brand svg{fill:white;width:22px;height:22px}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.btn-topbar{padding:7px 14px;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit;display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);color:white;transition:background .15s;text-decoration:none}
+.btn-topbar:hover{background:rgba(255,255,255,.25)}
+.btn-topbar svg{width:16px;height:16px;fill:white}
+/* Layout */
+.layout{display:flex;flex:1;padding-top:var(--topbar-h);min-height:calc(100vh - var(--topbar-h))}
+.sidebar{width:var(--sidebar-w);background:var(--card);flex-shrink:0;position:fixed;top:var(--topbar-h);left:0;bottom:0;display:flex;flex-direction:column;border-right:1px solid var(--border);transition:width .25s;overflow:hidden;z-index:90}
+.sidebar.collapsed{width:var(--sidebar-c)}
+.sidebar-section-lbl{font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--muted);padding:16px 16px 6px;white-space:nowrap;overflow:hidden;transition:opacity .2s}
+.sidebar.collapsed .sidebar-section-lbl{opacity:0}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;border-radius:10px;margin:2px 8px;transition:background .15s,color .15s;white-space:nowrap;overflow:hidden;border:none;background:none;font-family:inherit;font-size:14px;color:var(--muted);font-weight:500;text-align:left;width:calc(100% - 16px)}
+.nav-item svg{width:20px;height:20px;fill:var(--muted);flex-shrink:0}
+.nav-item span{overflow:hidden;text-overflow:ellipsis;transition:opacity .2s}
+.nav-item:hover{background:#F0F4F7;color:var(--text)}
+.nav-item:hover svg{fill:var(--text)}
+.nav-item.active{background:#E8F5E9;color:var(--primary);font-weight:600}
+.nav-item.active svg{fill:var(--primary)}
+.sidebar.collapsed .nav-item span{opacity:0}
+.sidebar.collapsed .nav-item{justify-content:center}
+.sidebar-footer{margin-top:auto;padding:12px 8px;border-top:1px solid var(--border)}
+.main{flex:1;margin-left:var(--sidebar-w);padding:24px;transition:margin-left .25s;min-width:0}
+.main.wide{margin-left:var(--sidebar-c)}
+/* Pages */
+.page{display:none}.page.active{display:block}
+.page-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:12px}
+.page-title{font-size:20px;font-weight:800;display:flex;align-items:center;gap:8px}
+.page-title svg{width:24px;height:24px;fill:var(--primary)}
+/* Stats */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:14px;margin-bottom:24px}
+.stat-card{background:var(--card);border-radius:14px;padding:18px;border:1px solid var(--border);display:flex;align-items:center;gap:14px;box-shadow:0 1px 6px rgba(0,0,0,.05)}
+.stat-ico{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.stat-ico svg{width:24px;height:24px}
+.ico-green{background:#DCFCE7}.ico-green svg{fill:#15803D}
+.ico-blue{background:#DBEAFE}.ico-blue svg{fill:#1D4ED8}
+.ico-amber{background:#FEF9C3}.ico-amber svg{fill:#92400E}
+.ico-rose{background:#FFE4E6}.ico-rose svg{fill:#BE123C}
+.stat-val{font-size:28px;font-weight:800;line-height:1;color:var(--primary)}
+.stat-lbl{font-size:12px;color:var(--muted);margin-top:3px;font-weight:500}
+/* Card */
+.card{background:var(--card);border-radius:14px;padding:20px;border:1px solid var(--border);box-shadow:0 1px 6px rgba(0,0,0,.05);margin-bottom:20px}
+.card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+.card-title{font-size:14px;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:7px}
+.card-title svg{width:18px;height:18px;fill:var(--primary)}
+/* Table */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:#F8FAFC;padding:10px 14px;text-align:left;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:10px 14px;border-bottom:1px solid #F1F5F9;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:#FAFBFC}
+/* Badge */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600}
+.badge-green{background:#DCFCE7;color:#15803D}.badge-blue{background:#DBEAFE;color:#1D4ED8}
+.badge-amber{background:#FEF3C7;color:#92400E}.badge-red{background:#FFE4E6;color:#BE123C}
+.badge-gray{background:#F1F5F9;color:#64748B}.badge-purple{background:#EDE9FE;color:#5B21B6}
+.badge-pink{background:#FCE7F3;color:#9D174D}.badge-orange{background:#FEF3C7;color:#92400E}
+.grade{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;font-weight:800;font-size:13px}
+.gA{background:#DCFCE7;color:#166534}.gB{background:#DBEAFE;color:#1E40AF}
+.gC{background:#FEF9C3;color:#713F12}.gD{background:#FFEDD5;color:#9A3412}.gE{background:#FFE4E6;color:#9F1239}
+/* Buttons */
+.btn{padding:8px 16px;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit;display:inline-flex;align-items:center;gap:6px;transition:all .15s}
+.btn svg{width:15px;height:15px}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary svg{fill:#fff}
+.btn-primary:hover{background:var(--pmid)}
+.btn-danger{background:var(--danger);color:#fff}.btn-danger svg{fill:#fff}
+.btn-danger:hover{filter:brightness(.9)}
+.btn-outline{background:#fff;border:1.5px solid var(--border);color:var(--text)}.btn-outline svg{fill:var(--text)}
+.btn-outline:hover{border-color:var(--primary);color:var(--primary)}
+.btn-sm{padding:5px 11px;font-size:12px}.btn-sm svg{width:13px;height:13px}
+.btn-icon{padding:7px;border-radius:8px;background:#F1F5F9;border:none;cursor:pointer;display:inline-flex;transition:background .15s}
+.btn-icon svg{width:16px;height:16px;fill:var(--muted)}
+.btn-icon:hover{background:#E2E8F0}.btn-icon:hover svg{fill:var(--text)}
+/* Quiz grid */
+.quiz-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.qcard{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;display:flex;gap:14px;align-items:flex-start;box-shadow:0 1px 5px rgba(0,0,0,.05);transition:box-shadow .2s,transform .15s;cursor:pointer}
+.qcard:hover{box-shadow:0 4px 16px rgba(0,0,0,.1);transform:translateY(-1px)}
+.qcard-ico{width:44px;height:44px;border-radius:12px;flex-shrink:0;background:linear-gradient(135deg,var(--primary),var(--plight));display:flex;align-items:center;justify-content:center}
+.qcard-ico svg{width:22px;height:22px;fill:white}
+.qcard-info{flex:1;min-width:0}
+.qcard-info h4{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qcard-info p{font-size:12px;color:var(--muted);margin-top:2px}
+.qcard-actions{display:flex;gap:4px;flex-shrink:0}
+/* Detail */
+.detail-back{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--primary);cursor:pointer;margin-bottom:18px;padding:6px 12px 6px 8px;border-radius:8px;border:none;background:none;transition:background .15s}
+.detail-back:hover{background:#E8F5E9}
+.detail-back svg{width:18px;height:18px;fill:var(--primary)}
+.detail-hdr-card{background:var(--card);border-radius:14px;padding:22px;border:1px solid var(--border);box-shadow:0 1px 6px rgba(0,0,0,.05);margin-bottom:16px;display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}
+.detail-hdr-ico{width:56px;height:56px;border-radius:14px;flex-shrink:0;background:linear-gradient(135deg,var(--primary),var(--plight));display:flex;align-items:center;justify-content:center}
+.detail-hdr-ico svg{width:28px;height:28px;fill:white}
+.detail-hdr-info{flex:1;min-width:180px}
+.detail-hdr-info h2{font-size:20px;font-weight:800;margin-bottom:4px}
+.detail-hdr-info p{font-size:13px;color:var(--muted)}
+.detail-hdr-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.detail-tabs{display:flex;gap:2px;background:#F1F5F9;border-radius:10px;padding:3px;margin-bottom:18px;width:fit-content}
+.dtab{padding:8px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:none;color:var(--muted);transition:all .15s}
+.dtab.active{background:white;color:var(--primary);box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.detail-panel{display:none}.detail-panel.active{display:block}
+/* Soal item */
+.soal-item{background:#F8FAFC;border:1.5px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px}
+.soal-item-hdr{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+.soal-num{background:var(--primary);color:#fff;border-radius:6px;padding:2px 8px;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px}
+.soal-type-badge{flex-shrink:0;margin-top:2px}
+.soal-text{font-size:14px;font-weight:600;flex:1;line-height:1.5}
+.soal-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
+.soal-opt{font-size:12px;padding:6px 10px;border-radius:7px;background:white;border:1px solid var(--border);line-height:1.4;display:flex;align-items:baseline;gap:4px}
+.opt-lbl{flex-shrink:0;direction:ltr}
+.opt-txt{flex:1}
+.opt-txt.has-arabic{direction:rtl;text-align:right;font-family:'Amiri',serif;font-size:15px;line-height:2;display:block;unicode-bidi:bidi-override}
+.opt-txt.has-arabic-mixed{direction:ltr;text-align:left;font-family:'Inter','Amiri',serif;line-height:2;display:inline}
+.soal-opt.correct{background:#DCFCE7;border-color:#86EFAC;color:#166534;font-weight:600}
+.soal-opt.partial{background:#FEF3C7;border-color:#FCD34D;color:#92400E;font-weight:600}
+.soal-exp{font-size:12px;color:var(--muted);font-style:italic;border-top:1px solid var(--border);padding-top:8px;margin-top:8px}
+.soal-match-row{display:flex;gap:8px;margin-bottom:6px;font-size:12px;align-items:center}
+.soal-match-left{background:var(--primary);color:#fff;padding:4px 10px;border-radius:6px;font-weight:600}
+.soal-match-arrow{color:var(--muted)}
+.soal-match-right{background:#DCFCE7;color:#166534;padding:4px 10px;border-radius:6px;font-weight:600;border:1px solid #86EFAC}
+/* Form */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-row1{display:grid;gap:14px}
+.fgroup{display:flex;flex-direction:column;gap:5px}
+.fgroup label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.fgroup input,.fgroup textarea,.fgroup select{padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:14px;font-family:inherit;color:var(--text);outline:none;background:#fff;transition:border-color .2s}
+.fgroup input:focus,.fgroup textarea:focus,.fgroup select:focus{border-color:var(--pmid)}
+.fgroup textarea{resize:vertical;min-height:64px;line-height:1.45}
+.opts-2col{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.correct-row{display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap}
+.correct-row label{font-size:12px;font-weight:600;color:var(--muted)}
+/* Tipe soal selector */
+.type-selector{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.type-btn{padding:7px 14px;border-radius:8px;border:1.5px solid var(--border);background:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;color:var(--muted);transition:all .15s;display:flex;align-items:center;gap:5px}
+.type-btn:hover{border-color:var(--pmid);color:var(--pmid)}
+.type-btn.active{border-color:var(--primary);background:#E8F5E9;color:var(--primary)}
+/* Panel tipe soal di modal */
+.soal-panel{display:none}.soal-panel.active{display:block}
+/* Menjodohkan rows */
+.match-pairs{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.match-pair{display:grid;grid-template-columns:1fr auto 1fr auto;gap:8px;align-items:center}
+.match-pair input{padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;outline:none;background:#fff}
+.match-pair input:focus{border-color:var(--pmid)}
+.match-pair .arr{color:var(--muted);font-size:16px;font-weight:700}
+.match-pair .rm-btn{background:none;border:none;cursor:pointer;color:var(--danger);font-size:16px;padding:0 2px}
+/* Import */
+.drop-zone{border:2px dashed var(--border);border-radius:14px;padding:36px 20px;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+.drop-zone:hover,.drop-zone.drag{border-color:var(--pmid);background:#F0FBF8}
+.drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.drop-zone svg{width:36px;height:36px;fill:var(--muted);margin-bottom:8px}
+.drop-zone h4{font-size:14px;font-weight:600;color:var(--text)}
+.drop-zone p{font-size:12px;color:var(--muted);margin-top:3px}
+.template-dl{font-size:12px;color:var(--pmid);cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-weight:600}
+.template-dl svg{width:13px;height:13px;fill:var(--pmid)}
+.preview-table{margin-top:14px;max-height:240px;overflow:auto;border:1px solid var(--border);border-radius:10px}
+.preview-table table{font-size:12px}
+.preview-table th,.preview-table td{padding:6px 10px}
+/* Misc */
+.lb-filter{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.rank-num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;font-weight:700;font-size:13px;background:#F1F5F9;color:var(--muted)}
+.r1{background:#FEF9C3;color:#854D0E}.r2{background:#F1F5F9;color:#475569}.r3{background:#FFEDD5;color:#9A3412}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:500;padding:20px}
+.overlay.open{display:flex}
+.modal{background:#fff;border-radius:18px;padding:28px;max-width:700px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.3)}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.modal-hdr h2{font-size:18px;font-weight:800;display:flex;align-items:center;gap:8px}
+.modal-hdr h2 svg{width:22px;height:22px;fill:var(--primary)}
+.modal-close{width:32px;height:32px;border-radius:8px;background:#F1F5F9;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.modal-close svg{width:16px;height:16px;fill:var(--muted)}
+.modal-close:hover{background:var(--border)}
+.modal-foot{display:flex;justify-content:flex-end;gap:8px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
+.sep{height:1px;background:var(--border);margin:8px 0}
+.loading{text-align:center;padding:40px;color:var(--muted);font-size:14px}
+.empty{text-align:center;padding:48px 20px;color:var(--muted)}
+.empty svg{width:44px;height:44px;fill:var(--border);margin-bottom:10px}
+.empty p{font-size:14px}
+#adm-toast{position:fixed;bottom:24px;right:24px;background:var(--text);color:#fff;font-size:13px;padding:10px 18px;border-radius:10px;opacity:0;transition:all .25s;pointer-events:none;z-index:600;box-shadow:0 4px 20px rgba(0,0,0,.25)}
+#adm-toast.show{opacity:1}
+#adm-toast.t-ok{background:#166534}
+#adm-toast.t-err{background:#991B1B}
+#live-notif-container{position:fixed;top:70px;right:20px;z-index:700;display:flex;flex-direction:column;gap:8px;max-width:380px}
+.live-notif{background:#1e293b;color:#f1f5f9;font-size:13px;padding:12px 16px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.3);opacity:0;transform:translateX(30px);transition:all .35s;pointer-events:none;border-left:4px solid #64748b;line-height:1.4}
+.live-notif.show{opacity:1;transform:translateX(0)}
+.live-notif.live-notif-ok{border-left-color:#22c55e}
+.live-notif.live-notif-info{border-left-color:#3b82f6}
+.live-notif.live-notif-warn{border-left-color:#f59e0b}
+/* Arabic */
+.has-arabic{font-family:'Amiri',serif!important;direction:rtl;text-align:right;line-height:2;font-size:15px;unicode-bidi:bidi-override}
+.has-arabic-mixed{font-family:'Inter','Amiri',serif!important;direction:ltr;text-align:left;unicode-bidi:embed;line-height:2}
+/* ── Print ── */
+@media print {
+  body { background: #fff !important; }
+  .sidebar, .topbar, .page-hdr .btn, .lb-filter select,
+  .card-hdr select, #live-notif-container { display: none !important; }
+  .main { margin-left: 0 !important; padding: 0 !important; }
+  .page { display: block !important; }
+  .page:not(.print-target) { display: none !important; }
+  .card { box-shadow: none !important; border: 1px solid #ddd !important; }
+  .print-header { display: block !important; }
+  table { font-size: 12px; }
+  th { background: #f0f0f0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .grade { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .rank-num { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+.print-header { display: none; text-align: center; margin-bottom: 18px; }
+.print-header h2 { font-size: 16px; margin: 0 0 4px; }
+.print-header p  { font-size: 12px; color: #555; margin: 0; }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <button class="burger" onclick="toggleSidebar()"><svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+  <div class="topbar-brand"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M10 10 Q10 10 90 10 Q90 10 90 65 Q90 65 55 65 L40 85 L40 65 Q10 65 10 65 Q10 65 10 10 Z" fill="white" opacity="0.95"/><text x="50" y="52" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="44" text-anchor="middle" fill="#075E54">Q</text></svg>QuizChat Admin</div>
+  <div class="topbar-right">
+    <a href="/" class="btn-topbar" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>Halaman Siswa</a>
+  </div>
+</div>
+
+<div class="layout">
+  <div class="sidebar" id="sidebar">
+    <div style="padding:12px 8px 4px">
+      <div class="sidebar-section-lbl">Menu Utama</div>
+      <button class="nav-item active" onclick="goPage('dashboard',this)"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Dashboard</span></button>
+      <button class="nav-item" id="nav-quizzes" onclick="goPage('quizzes',this)"><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg><span>Kelola Quiz</span></button>
+      <button class="nav-item" onclick="goPage('students',this)"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg><span>Data Siswa</span></button>
+      <div class="sep"></div>
+      <div class="sidebar-section-lbl">Laporan</div>
+      <button class="nav-item" onclick="goPage('results',this)"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg><span>Hasil Ujian</span></button>
+      <button class="nav-item" onclick="goPage('leaderboard',this)"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm4.24 16L12 15.45 7.77 18l1.12-4.81-3.73-3.23 4.92-.42L12 5l1.92 4.53 4.92.42-3.73 3.23L16.23 18z"/></svg><span>Papan Ranking</span></button>
+    </div>
+    <div class="sidebar-footer">
+      <button class="nav-item" onclick="refreshAll()" style="margin:0;width:100%"><svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg><span>Refresh</span></button>
+    </div>
+  </div>
+
+  <div class="main" id="main">
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-hdr"><div class="page-title"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>Dashboard</div></div>
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-ico ico-green"><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg></div><div><div class="stat-val" id="s-quiz">—</div><div class="stat-lbl">Total Quiz</div></div></div>
+        <div class="stat-card"><div class="stat-ico ico-blue"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M10 10 Q10 10 90 10 Q90 10 90 65 Q90 65 55 65 L40 85 L40 65 Q10 65 10 65 Q10 65 10 10 Z" fill="white" opacity="0.95"/><text x="50" y="52" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="44" text-anchor="middle" fill="#075E54">Q</text></svg></div><div><div class="stat-val" id="s-sess">—</div><div class="stat-lbl">Sesi Selesai</div></div></div>
+        <div class="stat-card"><div class="stat-ico ico-amber"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm4.24 16L12 15.45 7.77 18l1.12-4.81-3.73-3.23 4.92-.42L12 5l1.92 4.53 4.92.42-3.73 3.23L16.23 18z"/></svg></div><div><div class="stat-val" id="s-avg">—</div><div class="stat-lbl">Rata-rata Nilai</div></div></div>
+        <div class="stat-card"><div class="stat-ico ico-rose"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></div><div><div class="stat-val" id="s-active">0</div><div class="stat-lbl">Siswa Aktif</div></div></div>
+      </div>
+      <div class="card"><div class="card-hdr"><div class="card-title"><svg viewBox="0 0 24 24"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>Aktivitas Terbaru</div></div><div id="dash-recent"><div class="loading">Memuat...</div></div></div>
+    </div>
+
+    <!-- KELOLA QUIZ -->
+    <div class="page" id="page-quizzes">
+      <div class="page-hdr">
+        <div class="page-title"><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg>Kelola Quiz</div>
+        <button class="btn btn-primary" onclick="openNewQuiz()"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>Buat Quiz Baru</button>
+      </div>
+      <div class="quiz-grid" id="quiz-grid"><div class="loading">Memuat quiz...</div></div>
+    </div>
+
+    <!-- DETAIL QUIZ -->
+    <div class="page" id="page-quiz-detail">
+      <button class="detail-back" onclick="goPage('quizzes',document.getElementById('nav-quizzes'))"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Kembali ke Daftar Quiz</button>
+      <div class="detail-hdr-card">
+        <div class="detail-hdr-ico"><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg></div>
+        <div class="detail-hdr-info"><h2 id="detail-title">—</h2><p id="detail-desc">—</p></div>
+        <div class="detail-hdr-actions">
+          <button class="btn btn-outline btn-sm" onclick="openEditQuizDetail()"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>Edit</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteCurrentQuiz()"><svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>Hapus Quiz</button>
+        </div>
+      </div>
+      <div class="detail-tabs">
+        <button class="dtab active" id="tab-soal" onclick="switchTab('soal',this)">📝 Soal</button>
+        <button class="dtab" id="tab-import" onclick="switchTab('import',this)">📥 Import CSV</button>
+        <button class="dtab" id="tab-ranking" onclick="switchTab('ranking',this)">🏆 Ranking</button>
+      </div>
+      <div class="detail-panel active" id="dtab-soal">
+        <div class="card">
+          <div class="card-hdr">
+            <div class="card-title"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>Daftar Soal</div>
+            <button class="btn btn-primary btn-sm" onclick="openAddSoal()"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>Tambah Soal</button>
+          </div>
+          <div id="detail-soal-list"><div class="loading">Memuat soal...</div></div>
+        </div>
+      </div>
+      <div class="detail-panel" id="dtab-import">
+        <div class="card">
+          <div class="card-hdr">
+            <div class="card-title"><svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>Import Soal dari CSV</div>
+            <span class="template-dl" onclick="downloadSoalTemplate()"><svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>Unduh Template CSV</span>
+          </div>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Kolom wajib: <b>tipe, pertanyaan, a, b, c, d, jawaban</b>. Kolom opsional: <b>penjelasan</b>.<br>Nilai tipe: <b>pg</b> | <b>pgk</b> | <b>tf</b> | <b>menjodohkan</b> | <b>isian</b></p>
+          <div style="background:#FFF8E1;border:1.5px solid #F9A825;border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:13px;line-height:1.8">
+            <b>⚠️ Teks Arab:</b> Simpan CSV dari Excel sebagai <b>"CSV UTF-8 (dengan BOM)"</b> agar teks Arab tidak rusak.
+          </div>
+          <div class="drop-zone" id="dz-soal" ondragover="dzDrag(event,'dz-soal')" ondragleave="dzLeave('dz-soal')" ondrop="dzDropSoal(event)">
+            <input type="file" accept=".csv" onchange="handleImportSoal(event)">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11zm-7-7v4h2v-4h3l-4-4-4 4h3z"/></svg>
+            <h4>Drag &amp; Drop file atau klik untuk memilih</h4><p>Format: CSV UTF-8 (.csv)</p>
+          </div>
+          <div id="soal-preview"></div>
+          <div id="soal-import-actions" style="display:none;margin-top:14px;align-items:center;gap:10px">
+            <button class="btn btn-primary" onclick="doImportSoal()"><svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>Import Sekarang</button>
+            <span id="soal-import-info" style="font-size:13px;color:var(--muted)"></span>
+            <button class="btn btn-outline btn-sm" onclick="resetImport()">Batal</button>
+          </div>
+        </div>
+      </div>
+      <div class="detail-panel" id="dtab-ranking">
+        <div class="card"><div class="card-hdr"><div class="card-title"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm4.24 16L12 15.45 7.77 18l1.12-4.81-3.73-3.23 4.92-.42L12 5l1.92 4.53 4.92.42-3.73 3.23L16.23 18z"/></svg>Papan Peringkat</div></div><div id="detail-lb"><div class="loading">Memuat...</div></div></div>
+      </div>
+    </div>
+
+    <!-- DATA SISWA -->
+    <div class="page" id="page-students">
+      <div class="page-hdr">
+        <div class="page-title"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>Data Siswa</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-outline" onclick="printPage('students')"><svg viewBox="0 0 24 24"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>Cetak</button>
+          <button class="btn btn-outline" onclick="exportServerCSV()"><svg viewBox="0 0 24 24"><path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z"/></svg>Export CSV</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="print-header"><h2>👨‍🎓 Data Siswa</h2><p></p></div>
+        <div id="students-table"><div class="loading">Memuat...</div></div>
+      </div>
+    </div>
+
+    <!-- HASIL UJIAN -->
+    <div class="page" id="page-results">
+      <div class="page-hdr">
+        <div class="page-title"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>Hasil Ujian</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-outline" onclick="printPage('results')"><svg viewBox="0 0 24 24"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>Cetak</button>
+          <button class="btn btn-outline" onclick="exportServerCSV(document.getElementById('res-filter-quiz').value)"><svg viewBox="0 0 24 24"><path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z"/></svg>Export CSV</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card">
+          <div class="print-header"><h2>📋 Hasil Ujian</h2><p></p></div>
+          <div class="card-hdr"><select id="res-filter-quiz" onchange="loadResults()" style="padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:13px;outline:none;background:#fff"><option value="">Semua Quiz</option></select></div>
+          <div id="results-table"><div class="loading">Memuat...</div></div>
+        </div>
+    </div>
+
+    <!-- LEADERBOARD -->
+    <div class="page" id="page-leaderboard">
+      <div class="page-hdr">
+        <div class="page-title"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm4.24 16L12 15.45 7.77 18l1.12-4.81-3.73-3.23 4.92-.42L12 5l1.92 4.53 4.92.42-3.73 3.23L16.23 18z"/></svg>Papan Ranking</div>
+        <button class="btn btn-outline" id="btn-print-lb" onclick="printPage('leaderboard')" style="display:none"><svg viewBox="0 0 24 24"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>Cetak</button>
+      </div>
+      <div class="lb-filter"><select id="lb-sel" onchange="loadLeaderboard()" style="padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;font-size:14px;outline:none;background:#fff;min-width:260px"><option value="">— Pilih Quiz —</option></select></div>
+      <div class="card"><div id="lb-table"><div class="empty"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm4.24 16L12 15.45 7.77 18l1.12-4.81-3.73-3.23 4.92-.42L12 5l1.92 4.53 4.92.42-3.73 3.23L16.23 18z"/></svg><p>Pilih quiz untuk melihat peringkat</p></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: BUAT QUIZ -->
+<div class="overlay" id="modal-quiz">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-hdr"><h2><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>Buat Quiz Baru</h2><button class="modal-close" onclick="closeModal('modal-quiz')"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></div>
+    <div class="form-row1">
+      <div class="fgroup"><label>Mata Pelajaran *</label><input type="text" id="nq-mapel" placeholder="Contoh: Matematika, IPA, Bahasa Arab..."></div>
+      <div class="fgroup"><label>Kelas *</label><input type="text" id="nq-kelas" placeholder="Contoh: VII A, VIII B, IX C..."></div>
+      <div class="fgroup"><label>Nama Kuis *</label><input type="text" id="nq-title" placeholder="Contoh: Ulangan Bab 3 — Pecahan"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeModal('modal-quiz')">Batal</button>
+      <button class="btn btn-primary" onclick="saveNewQuiz()"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>Buat Quiz</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: EDIT QUIZ -->
+<div class="overlay" id="modal-edit">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-hdr"><h2><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>Edit Quiz</h2><button class="modal-close" onclick="closeModal('modal-edit')"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></div>
+    <div class="form-row1">
+      <div class="fgroup"><label>Nama Kuis *</label><input type="text" id="eq-title" placeholder="Nama kuis..."></div>
+      <div class="fgroup"><label>Deskripsi</label><input type="text" id="eq-desc" placeholder="Contoh: Matematika — Kelas VII A"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeModal('modal-edit')">Batal</button>
+      <button class="btn btn-primary" onclick="saveEditQuiz()"><svg viewBox="0 0 24 24"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: TAMBAH / EDIT SOAL -->
+<div class="overlay" id="modal-add-soal">
+  <div class="modal">
+    <div class="modal-hdr"><h2><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg><span id="soal-modal-title">Tambah Soal</span></h2><button class="modal-close" onclick="closeModal('modal-add-soal')"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button></div>
+
+    <!-- Pemilih tipe soal -->
+    <div style="margin-bottom:16px">
+      <label style="font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:8px">Tipe Soal</label>
+      <div class="type-selector">
+        <button class="type-btn active" onclick="selectType('pg',this)">📝 Pilihan Ganda</button>
+        <button class="type-btn" onclick="selectType('pgk',this)">☑️ PG Kompleks</button>
+        <button class="type-btn" onclick="selectType('tf',this)">✅ Benar / Salah</button>
+        <button class="type-btn" onclick="selectType('menjodohkan',this)">🔗 Menjodohkan</button>
+        <button class="type-btn" onclick="selectType('isian',this)">✏️ Isian Singkat</button>
+      </div>
+    </div>
+
+    <!-- Teks soal (semua tipe) -->
+    <div class="fgroup" style="margin-bottom:14px">
+      <label>Teks Soal *</label>
+      <textarea id="as-txt" rows="3" placeholder="Tulis pertanyaan..."></textarea>
+    </div>
+
+    <!-- === PG biasa === -->
+    <div class="soal-panel active" id="panel-pg">
+      <div class="opts-2col" style="margin-bottom:10px">
+        <div class="fgroup"><label>A.</label><input type="text" id="as-a" placeholder="Pilihan A"></div>
+        <div class="fgroup"><label>B.</label><input type="text" id="as-b" placeholder="Pilihan B"></div>
+        <div class="fgroup"><label>C.</label><input type="text" id="as-c" placeholder="Pilihan C"></div>
+        <div class="fgroup"><label>D.</label><input type="text" id="as-d" placeholder="Pilihan D"></div>
+      </div>
+      <div class="correct-row"><label>Jawaban Benar:</label><select id="as-ans-pg"><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+    </div>
+
+    <!-- === PG Kompleks (2+ jawaban benar) === -->
+    <div class="soal-panel" id="panel-pgk">
+      <div style="background:#EEF2FF;border-radius:8px;padding:10px 12px;font-size:12px;color:#3730a3;margin-bottom:12px">☑️ <b>PG Kompleks:</b> Siswa harus memilih semua jawaban yang benar. Nilai penuh jika semua tepat, nilai setengah jika sebagian benar.</div>
+      <div class="opts-2col" style="margin-bottom:10px">
+        <div class="fgroup"><label>A.</label><input type="text" id="pgk-a" placeholder="Pilihan A"></div>
+        <div class="fgroup"><label>B.</label><input type="text" id="pgk-b" placeholder="Pilihan B"></div>
+        <div class="fgroup"><label>C.</label><input type="text" id="pgk-c" placeholder="Pilihan C"></div>
+        <div class="fgroup"><label>D.</label><input type="text" id="pgk-d" placeholder="Pilihan D"></div>
+      </div>
+      <div class="correct-row" style="flex-wrap:wrap;gap:8px">
+        <label>Jawaban Benar (centang semua yang benar):</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:14px;font-weight:normal;text-transform:none;letter-spacing:0;color:var(--text)"><input type="checkbox" id="pgk-ck-a" value="A"> A</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:14px;font-weight:normal;text-transform:none;letter-spacing:0;color:var(--text)"><input type="checkbox" id="pgk-ck-b" value="B"> B</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:14px;font-weight:normal;text-transform:none;letter-spacing:0;color:var(--text)"><input type="checkbox" id="pgk-ck-c" value="C"> C</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:14px;font-weight:normal;text-transform:none;letter-spacing:0;color:var(--text)"><input type="checkbox" id="pgk-ck-d" value="D"> D</label>
+      </div>
+    </div>
+
+    <!-- === Benar / Salah === -->
+    <div class="soal-panel" id="panel-tf">
+      <div style="background:#F0FDF4;border-radius:8px;padding:10px 12px;font-size:12px;color:#166534;margin-bottom:12px">✅ <b>Benar/Salah:</b> Siswa memilih apakah pernyataan tersebut benar atau salah.</div>
+      <div class="correct-row"><label>Jawaban Benar:</label>
+        <select id="as-ans-tf"><option value="A">Benar</option><option value="B">Salah</option></select>
+      </div>
+    </div>
+
+    <!-- === Menjodohkan === -->
+    <div class="soal-panel" id="panel-menjodohkan">
+      <div style="background:#FFF7ED;border-radius:8px;padding:10px 12px;font-size:12px;color:#92400E;margin-bottom:12px">🔗 <b>Menjodohkan:</b> Masukkan pasangan kiri–kanan. Kolom kanan akan diacak untuk siswa.</div>
+      <div class="match-pairs" id="match-pairs-container">
+        <div class="match-pair"><input type="text" placeholder="Kiri 1" id="mp-l-0"><span class="arr">→</span><input type="text" placeholder="Kanan 1" id="mp-r-0"><button class="rm-btn" onclick="removeMatchPair(0)">✕</button></div>
+        <div class="match-pair"><input type="text" placeholder="Kiri 2" id="mp-l-1"><span class="arr">→</span><input type="text" placeholder="Kanan 2" id="mp-r-1"><button class="rm-btn" onclick="removeMatchPair(1)">✕</button></div>
+        <div class="match-pair"><input type="text" placeholder="Kiri 3" id="mp-l-2"><span class="arr">→</span><input type="text" placeholder="Kanan 3" id="mp-r-2"><button class="rm-btn" onclick="removeMatchPair(2)">✕</button></div>
+        <div class="match-pair"><input type="text" placeholder="Kiri 4" id="mp-l-3"><span class="arr">→</span><input type="text" placeholder="Kanan 4" id="mp-r-3"><button class="rm-btn" onclick="removeMatchPair(3)">✕</button></div>
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="addMatchPair()" style="margin-top:4px"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>Tambah Baris</button>
+    </div>
+
+    <!-- === Isian Singkat === -->
+    <div class="soal-panel" id="panel-isian">
+      <div style="background:#F0F9FF;border-radius:8px;padding:10px 12px;font-size:12px;color:#0c4a6e;margin-bottom:12px">✏️ <b>Isian Singkat:</b> Siswa mengetik jawaban. Pisahkan jawaban alternatif dengan tanda <b>|</b> (misal: Jakarta|jakarta|JAKARTA).</div>
+      <div class="fgroup"><label>Jawaban yang Diterima *</label><input type="text" id="as-ans-isian" placeholder="Contoh: Jakarta | Batavia | DKI Jakarta"></div>
+    </div>
+
+    <!-- Penjelasan (semua tipe) -->
+    <div class="fgroup" style="margin-top:14px">
+      <label>Penjelasan (opsional)</label>
+      <input type="text" id="as-exp" placeholder="Penjelasan jawaban...">
+    </div>
+
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeModal('modal-add-soal')">Batal</button>
+      <button class="btn btn-primary" onclick="saveSoal()">Simpan Soal</button>
+    </div>
+  </div>
+</div>
+
+<div id="adm-toast"></div>
+<div id="live-notif-container"></div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const socket = io({ transports:['websocket','polling'] });
+let quizList = [], currentQuiz = null, importedSoal = null;
+let currentSoalType = 'pg';
+let matchPairCount = 4;
+let sidebarOpen = true;
+
+// ── Tipe label helper ──
+const TYPE_LABELS = { pg:'📝 PG', pgk:'☑️ PG Kompleks', tf:'✅ Benar/Salah', menjodohkan:'🔗 Menjodohkan', isian:'✏️ Isian' };
+const TYPE_COLORS = { pg:'badge-blue', pgk:'badge-purple', tf:'badge-green', menjodohkan:'badge-orange', isian:'badge-pink' };
+
+// ── Live socket ──
+socket.on('connect', () => socket.emit('admin_register'));
+socket.on('student_finished', data => {
+  showLiveNotif(`✅ <b>${esc(data.studentName)}</b> selesai <b>${esc(data.quizTitle)}</b> — <b>${data.percentage}% (${data.grade})</b>`, 'ok');
+  document.getElementById('s-active').textContent = data.activeSessions;
+  const el = document.getElementById('s-sess'); if (el) el.textContent = (parseInt(el.textContent||'0')+1);
+  loadStudents(); loadResults();
+});
+socket.on('student_joined', data => { showLiveNotif(`🔔 <b>${esc(data.studentName)}</b> mulai <b>${esc(data.quizTitle)}</b>`, 'info'); document.getElementById('s-active').textContent = data.activeSessions; });
+socket.on('student_abandoned', data => { showLiveNotif(`⚠️ <b>${esc(data.studentName)}</b> keluar sebelum selesai`, 'warn'); document.getElementById('s-active').textContent = data.activeSessions; });
+socket.on('stats', ({activeSessions}) => document.getElementById('s-active').textContent = activeSessions);
+
+function showLiveNotif(html, type='ok') {
+  const c = document.getElementById('live-notif-container');
+  const n = document.createElement('div'); n.className=`live-notif live-notif-${type}`; n.innerHTML=html;
+  c.appendChild(n); setTimeout(()=>n.classList.add('show'),10);
+  setTimeout(()=>{ n.classList.remove('show'); setTimeout(()=>n.remove(),400); },5000);
+}
+
+// ── Utils ──
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function hasArabic(str){ return /[\u0600-\u06FF\u0750-\u077F]/.test(str); }
+function arabicRatio(str){
+  const arabChars=(str.match(/[\u0600-\u06FF\u0750-\u077F\uFB50-\uFDFF\uFE70-\uFEFF]/g)||[]).length;
+  const latinChars=(str.match(/[A-Za-z\u00C0-\u024F]/g)||[]).length;
+  const total=arabChars+latinChars;
+  return total===0?0:arabChars/total;
+}
+function applyArabicDir(el){
+  // Selalu set dir attribute agar Unicode Bidi Algorithm browser bekerja benar
+  el.setAttribute('dir','rtl');
+  el.style.fontFamily="'Amiri',serif";
+  el.style.fontSize='15px';
+  el.style.lineHeight='2';
+  el.style.textAlign='right';
+  el.style.unicodeBidi='bidi-override';
+}
+function wrapArabicSegments(el){
+  if(!el.textContent||el.getAttribute('data-arabic-done')) return;
+  const txt=el.textContent;
+  if(!hasArabic(txt)) return;
+  el.setAttribute('data-arabic-done','1');
+  const ratio=arabicRatio(txt);
+  const hasLatin=/[A-Za-z0-9\u00C0-\u024F]/.test(txt);
+  if(hasLatin && ratio<0.5){
+    // Teks campuran: latin dominan → container LTR, wrap segmen Arab dengan span RTL
+    el.classList.remove('has-arabic');
+    el.classList.add('has-arabic-mixed');
+    el.setAttribute('dir','ltr');
+    // Wrap setiap run Arab dengan span dir=rtl
+    el.innerHTML=el.innerHTML.replace(/([\u0600-\u06FF\u0750-\u077F\u0610-\u061A\u064B-\u065F\u200C\u200D\uFB50-\uFDFF\uFE70-\uFEFF][\u0600-\u06FF\u0750-\u077F\u0610-\u061A\u064B-\u065F\u200C\u200D\uFB50-\uFDFF\uFE70-\uFEFF\s]*)/g,
+      '<span dir="rtl" style="font-family:\'Amiri\',serif;font-size:1.1em;unicode-bidi:bidi-override;display:inline-block;">$1</span>');
+  } else {
+    // Arab murni atau Arab dominan → set dir=rtl pada elemen
+    el.classList.remove('has-arabic-mixed');
+    el.classList.add('has-arabic');
+    applyArabicDir(el);
+  }
+}
+function applyArabicFont(root){
+  (root||document).querySelectorAll('.soal-text,.soal-opt-content,.soal-exp,.soal-match-left,.soal-match-right,td,th').forEach(el=>{
+    if(hasArabic(el.textContent)) wrapArabicSegments(el);
+  });
+}
+function gradeOf(p){ return p>=90?'A':p>=80?'B':p>=70?'C':p>=60?'D':'E'; }
+function fmtDate(s){ if(!s)return'—'; return new Date(s).toLocaleString('id-ID',{day:'2-digit',month:'short',year:'2-digit',hour:'2-digit',minute:'2-digit'}); }
+function emptyHtml(msg){ return `<div class="empty"><svg viewBox="0 0 24 24"><path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg><p>${msg}</p></div>`; }
+function tableHtml(heads,rows){ return `<div style="overflow-x:auto"><table><thead><tr>${heads.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${Array.isArray(rows)?rows.join(''):rows}</tbody></table></div>`; }
+function adToast(msg,type='ok'){ const t=document.getElementById('adm-toast');t.textContent=msg;t.className=`show t-${type}`;clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),3500); }
+function dlFile(name,content,mime){ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type:mime}));a.download=name;a.click(); }
+async function apiFetch(url,opts={}){ try{ const r=await fetch(url,{headers:{'Content-Type':'application/json'},...opts});if(!r.ok){const t=await r.text();throw new Error(`HTTP ${r.status}: ${t}`);}return await r.json();}catch(e){console.error(e);adToast('Error: '+e.message,'err');throw e;} }
+
+// ── Sidebar ──
+function toggleSidebar(){ sidebarOpen=!sidebarOpen;document.getElementById('sidebar').classList.toggle('collapsed',!sidebarOpen);document.getElementById('main').classList.toggle('wide',!sidebarOpen); }
+function goPage(name,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  if(btn)btn.classList.add('active');
+  loadPage(name);
+}
+function loadPage(name){
+  if(name==='dashboard'){loadStats();loadRecent();}
+  if(name==='quizzes')loadQuizGrid();
+  if(name==='students')loadStudents();
+  if(name==='results'){populateResultFilter();loadResults();}
+  if(name==='leaderboard')populateLbSel();
+}
+function refreshAll(){ const a=document.querySelector('.page.active')?.id.replace('page-','')||'dashboard'; if(a==='quiz-detail'&&currentQuiz){openQuizDetail(currentQuiz.id);return;} loadPage(a); adToast('Data diperbarui','ok'); }
+
+// ── Dashboard ──
+async function loadStats(){
+  try{
+    const qs=await apiFetch('/api/quizzes'); document.getElementById('s-quiz').textContent=qs.length;
+    const ss=await apiFetch('/api/sessions'); const fin=ss.filter(s=>s.finished_at);
+    document.getElementById('s-sess').textContent=fin.length;
+    document.getElementById('s-avg').textContent=fin.length?Math.round(fin.reduce((a,s)=>a+s.score/s.total*100,0)/fin.length)+'%':'—';
+    socket.emit('get_stats');
+  }catch(e){}
+}
+function exportServerCSV(quizId){ window.location.href='/api/sessions/export'+(quizId?`?quiz_id=${quizId}`:''); adToast('📥 Mengunduh CSV...','ok'); }
+async function loadRecent(){
+  try{
+    const ss=await apiFetch('/api/sessions'); const el=document.getElementById('dash-recent');
+    if(!ss.length){el.innerHTML=emptyHtml('Belum ada aktivitas');return;}
+    el.innerHTML=tableHtml(['Nama','Quiz','Nilai','Status','Waktu'],ss.slice(0,20).map(s=>{
+      const pct=s.total?Math.round(s.score/s.total*100):0; const g=gradeOf(pct); const fin=!!s.finished_at;
+      return `<tr><td><b>${esc(s.student_name)}</b></td><td>${esc(s.quiz_title)}</td><td>${fin?`<span class="grade g${g}">${g}</span> ${pct}%`:'—'}</td><td>${fin?'<span class="badge badge-green">✔ Selesai</span>':'<span class="badge badge-amber">⏳ Aktif</span>'}</td><td style="color:var(--muted);font-size:12px">${fmtDate(s.started_at)}</td></tr>`;
+    }));
+    applyArabicFont(el);
+  }catch(e){}
+}
+
+// ── Quiz Grid ──
+async function loadQuizGrid(){
+  const el=document.getElementById('quiz-grid'); el.innerHTML='<div class="loading">Memuat...</div>';
+  try{
+    quizList=await apiFetch('/api/quizzes');
+    if(!quizList.length){el.innerHTML=emptyHtml('Belum ada quiz. Buat yang pertama!');return;}
+    el.innerHTML=quizList.map(q=>`
+      <div class="qcard" onclick="openQuizDetail(${q.id})">
+        <div class="qcard-ico"><svg viewBox="0 0 24 24" fill="white"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg></div>
+        <div class="qcard-info"><h4>${esc(q.title)}</h4><p>${esc(q.description||'Tanpa deskripsi')} &middot; ${fmtDate(q.created_at)}</p></div>
+        <div class="qcard-actions" onclick="event.stopPropagation()">
+          <button class="btn-icon" onclick="openQuizDetail(${q.id})"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg></button>
+          <button class="btn-icon" onclick="openEditQuizCard(${q.id},'${esc(q.title).replace(/'/g,"\\'")}','${esc(q.description||'').replace(/'/g,"\\'")}')"><svg viewBox="0 0 24 24" style="fill:var(--info)"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button>
+          <button class="btn-icon" onclick="deleteQuiz(${q.id},'${esc(q.title).replace(/'/g,"\\'")}')"><svg viewBox="0 0 24 24" style="fill:var(--danger)"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></button>
+        </div>
+      </div>`).join('');
+  }catch(e){}
+}
+
+// ── Detail Quiz ──
+async function openQuizDetail(id){
+  try{
+    const data=await apiFetch(`/api/quizzes/${id}`); currentQuiz=data;
+    document.getElementById('detail-title').textContent=data.title;
+    document.getElementById('detail-desc').textContent=data.description||'Tanpa deskripsi';
+    document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+    document.getElementById('nav-quizzes').classList.add('active');
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('page-quiz-detail').classList.add('active');
+    switchTab('soal',document.getElementById('tab-soal'));
+    renderDetailSoal(data.questions||[]);
+    resetImport();
+  }catch(e){}
+}
+
+function renderDetailSoal(questions){
+  const el=document.getElementById('detail-soal-list');
+  if(!questions.length){el.innerHTML=emptyHtml('Belum ada soal. Tambah manual atau import CSV.');return;}
+  el.innerHTML=questions.map((q,i)=>{
+    const type=q.question_type||'pg';
+    const badge=`<span class="badge ${TYPE_COLORS[type]||'badge-gray'} soal-type-badge">${TYPE_LABELS[type]||type}</span>`;
+    let content='';
+    if(type==='pg'||type==='pgk'){
+      const keys=['option_a','option_b','option_c','option_d']; const abc=['A','B','C','D'];
+      const correctSet=new Set((q.correct_answer||'').toUpperCase().split('').filter(c=>/[A-D]/.test(c)));
+      content=`<div class="soal-opts">${keys.map((k,j)=>{
+        const isCorrect=correctSet.has(abc[j]);
+        return `<div class="soal-opt${isCorrect?' correct':''}"><b class="opt-lbl">${abc[j]}.</b><span class="opt-txt soal-opt-content">${esc(q[k])}${isCorrect?' ✔':''}</span></div>`;
+      }).join('')}</div>`;
+    } else if(type==='tf'){
+      content=`<div class="soal-opts"><div class="soal-opt${q.correct_answer==='A'?' correct':''}"><b>A.</b> Benar${q.correct_answer==='A'?' ✔':''}</div><div class="soal-opt${q.correct_answer==='B'?' correct':''}"><b>B.</b> Salah${q.correct_answer==='B'?' ✔':''}</div></div>`;
+    } else if(type==='menjodohkan'){
+      try{
+        const pairs=JSON.parse(q.option_a);
+        content=`<div style="margin-bottom:8px">${pairs.map(p=>`<div class="soal-match-row"><span class="soal-match-left">${esc(p.left)}</span><span class="soal-match-arrow">→</span><span class="soal-match-right">${esc(p.right)}</span></div>`).join('')}</div>`;
+      }catch(e){ content=`<div class="soal-opt correct">Pasangan: ${esc(q.correct_answer)}</div>`; }
+    } else if(type==='isian'){
+      content=`<div class="soal-opt correct" style="grid-column:1/-1">✏️ Jawaban: <b>${esc(q.correct_answer)}</b></div>`;
+    }
+    return `<div class="soal-item" id="soal-${q.id}">
+      <div class="soal-item-hdr">
+        <span class="soal-num">${i+1}</span>${badge}
+        <div class="soal-text">${esc(q.question_text)}</div>
+        <button class="btn-icon" onclick="deleteSoal(${q.id})" style="margin-left:auto;flex-shrink:0"><svg viewBox="0 0 24 24" style="fill:var(--danger)"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></button>
+      </div>
+      ${content}
+      ${q.explanation?`<div class="soal-exp">💡 ${esc(q.explanation)}</div>`:''}
+    </div>`;
+  }).join('');
+  applyArabicFont(el);
+}
+
+async function deleteSoal(id){
+  if(!confirm('Hapus soal ini?'))return;
+  try{ await apiFetch(`/api/questions/${id}`,{method:'DELETE'}); const r=await apiFetch(`/api/quizzes/${currentQuiz.id}`); currentQuiz=r; renderDetailSoal(currentQuiz.questions||[]); adToast('Soal dihapus.','ok'); }catch(e){}
+}
+
+function switchTab(name,btn){
+  document.querySelectorAll('.dtab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.detail-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('dtab-'+name).classList.add('active');
+  if(btn)btn.classList.add('active');
+  if(name==='ranking'&&currentQuiz)loadDetailRanking(currentQuiz.id);
+}
+
+async function loadDetailRanking(id){
+  const el=document.getElementById('detail-lb'); el.innerHTML='<div class="loading">Memuat...</div>';
+  try{
+    const data=await apiFetch(`/api/leaderboard/${id}`);
+    if(!data.length){el.innerHTML=emptyHtml('Belum ada siswa selesai');return;}
+    const medals=['🥇','🥈','🥉'];
+    el.innerHTML=tableHtml(['#','Nama','Nilai','Skor','Waktu'],data.map((s,i)=>{
+      const g=gradeOf(s.percentage); const rk=i<3?`<span class="rank-num r${i+1}">${medals[i]}</span>`:`<span class="rank-num">${i+1}</span>`;
+      return `<tr><td>${rk}</td><td><b>${esc(s.student_name)}</b></td><td><span class="grade g${g}">${g}</span> <b>${s.percentage}%</b></td><td>${s.score}/${s.total}</td><td style="color:var(--muted);font-size:12px">${fmtDate(s.finished_at)}</td></tr>`;
+    }));
+  }catch(e){}
+}
+
+// ── Tipe Soal Selector ──
+function selectType(type, btn){
+  currentSoalType=type;
+  document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.soal-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+type).classList.add('active');
+}
+
+// ── Menjodohkan helpers ──
+function addMatchPair(){
+  const c=document.getElementById('match-pairs-container');
+  const n=matchPairCount++;
+  const d=document.createElement('div'); d.className='match-pair'; d.id=`mp-row-${n}`;
+  d.innerHTML=`<input type="text" placeholder="Kiri ${n+1}" id="mp-l-${n}"><span class="arr">→</span><input type="text" placeholder="Kanan ${n+1}" id="mp-r-${n}"><button class="rm-btn" onclick="removeMatchPair(${n})">✕</button>`;
+  c.appendChild(d);
+}
+function removeMatchPair(n){
+  const r=document.getElementById(`mp-row-${n}`); if(r) r.remove();
+  else { const rows=document.querySelectorAll('.match-pair'); if(rows.length>2&&rows[n]) rows[n].remove(); }
+}
+
+// ── Tambah Soal ──
+function openAddSoal(){
+  document.getElementById('soal-modal-title').textContent='Tambah Soal';
+  ['as-txt','as-a','as-b','as-c','as-d','as-exp','as-ans-isian','pgk-a','pgk-b','pgk-c','pgk-d'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['pgk-ck-a','pgk-ck-b','pgk-ck-c','pgk-ck-d'].forEach(id=>{const el=document.getElementById(id);if(el)el.checked=false;});
+  document.getElementById('as-ans-pg').value='A';
+  document.getElementById('as-ans-tf').value='A';
+  // Reset match pairs
+  document.getElementById('match-pairs-container').innerHTML=`
+    <div class="match-pair" id="mp-row-0"><input type="text" placeholder="Kiri 1" id="mp-l-0"><span class="arr">→</span><input type="text" placeholder="Kanan 1" id="mp-r-0"><button class="rm-btn" onclick="removeMatchPair(0)">✕</button></div>
+    <div class="match-pair" id="mp-row-1"><input type="text" placeholder="Kiri 2" id="mp-l-1"><span class="arr">→</span><input type="text" placeholder="Kanan 2" id="mp-r-1"><button class="rm-btn" onclick="removeMatchPair(1)">✕</button></div>
+    <div class="match-pair" id="mp-row-2"><input type="text" placeholder="Kiri 3" id="mp-l-2"><span class="arr">→</span><input type="text" placeholder="Kanan 3" id="mp-r-2"><button class="rm-btn" onclick="removeMatchPair(2)">✕</button></div>
+    <div class="match-pair" id="mp-row-3"><input type="text" placeholder="Kiri 4" id="mp-l-3"><span class="arr">→</span><input type="text" placeholder="Kanan 4" id="mp-r-3"><button class="rm-btn" onclick="removeMatchPair(3)">✕</button></div>`;
+  matchPairCount=4;
+  // Reset ke PG
+  selectType('pg', document.querySelector('.type-btn'));
+  openModal('modal-add-soal');
+  setTimeout(()=>document.getElementById('as-txt').focus(),100);
+}
+
+async function saveSoal(){
+  const type=currentSoalType;
+  const txt=document.getElementById('as-txt').value.trim();
+  const exp=document.getElementById('as-exp').value.trim();
+  if(!txt){adToast('Teks soal tidak boleh kosong!','err');return;}
+
+  let payload={ question_type:type, question_text:txt, explanation:exp };
+
+  if(type==='pg'){
+    const a=document.getElementById('as-a').value.trim(), b=document.getElementById('as-b').value.trim(),
+          c=document.getElementById('as-c').value.trim(), d=document.getElementById('as-d').value.trim();
+    if(!a||!b||!c||!d){adToast('Lengkapi semua pilihan A–D!','err');return;}
+    payload={...payload, option_a:a, option_b:b, option_c:c, option_d:d, correct_answer:document.getElementById('as-ans-pg').value};
+
+  } else if(type==='pgk'){
+    const a=document.getElementById('pgk-a').value.trim(), b=document.getElementById('pgk-b').value.trim(),
+          c=document.getElementById('pgk-c').value.trim(), d=document.getElementById('pgk-d').value.trim();
+    if(!a||!b||!c||!d){adToast('Lengkapi semua pilihan A–D!','err');return;}
+    const correct=['A','B','C','D'].filter(k=>document.getElementById(`pgk-ck-${k.toLowerCase()}`).checked).join('');
+    if(!correct){adToast('Pilih minimal 1 jawaban benar!','err');return;}
+    payload={...payload, option_a:a, option_b:b, option_c:c, option_d:d, correct_answer:correct};
+
+  } else if(type==='tf'){
+    payload={...payload, option_a:'Benar', option_b:'Salah', option_c:'', option_d:'', correct_answer:document.getElementById('as-ans-tf').value};
+
+  } else if(type==='menjodohkan'){
+    const pairs=[];
+    document.querySelectorAll('.match-pair').forEach((row,idx)=>{
+      const l=row.querySelector('input:first-child')?.value.trim();
+      const r=row.querySelector('input:nth-child(3)')?.value.trim();
+      if(l&&r) pairs.push({left:l,right:r});
+    });
+    if(pairs.length<2){adToast('Minimal 2 pasangan!','err');return;}
+    // Simpan pairs sebagai JSON di option_a; correct_answer = "0,1,2,3" (index pasangan)
+    payload={...payload, option_a:JSON.stringify(pairs), option_b:'', option_c:'', option_d:'', correct_answer:pairs.map((_,i)=>i).join(',')};
+
+  } else if(type==='isian'){
+    const ans=document.getElementById('as-ans-isian').value.trim();
+    if(!ans){adToast('Jawaban tidak boleh kosong!','err');return;}
+    payload={...payload, option_a:'', option_b:'', option_c:'', option_d:'', correct_answer:ans};
+  }
+
+  try{
+    await apiFetch(`/api/quizzes/${currentQuiz.id}/questions`,{method:'POST',body:JSON.stringify(payload)});
+    closeModal('modal-add-soal');
+    const r=await apiFetch(`/api/quizzes/${currentQuiz.id}`); currentQuiz=r;
+    renderDetailSoal(currentQuiz.questions||[]);
+    adToast('Soal berhasil ditambahkan!','ok');
+  }catch(e){}
+}
+
+// ── Edit / Hapus Quiz ──
+function openEditQuizCard(id,title,desc){ document.getElementById('eq-title').value=title; document.getElementById('eq-desc').value=desc; document.getElementById('modal-edit').dataset.quizId=id; openModal('modal-edit'); }
+function openEditQuizDetail(){ if(!currentQuiz)return; openEditQuizCard(currentQuiz.id,currentQuiz.title,currentQuiz.description||''); }
+async function saveEditQuiz(){
+  const id=document.getElementById('modal-edit').dataset.quizId;
+  const title=document.getElementById('eq-title').value.trim(); const desc=document.getElementById('eq-desc').value.trim();
+  if(!title){adToast('Judul kosong!','err');return;}
+  try{
+    await apiFetch(`/api/quizzes/${id}`,{method:'PUT',body:JSON.stringify({title,description:desc})});
+    closeModal('modal-edit'); adToast('Quiz diperbarui!','ok');
+    if(currentQuiz&&currentQuiz.id==id){currentQuiz.title=title;currentQuiz.description=desc;document.getElementById('detail-title').textContent=title;document.getElementById('detail-desc').textContent=desc||'Tanpa deskripsi';}
+    loadQuizGrid();
+  }catch(e){}
+}
+async function deleteQuiz(id,title){
+  if(!confirm(`Hapus quiz "${title}"?\nSemua soal dan data sesi ikut terhapus.`))return;
+  try{ await apiFetch(`/api/quizzes/${id}`,{method:'DELETE'}); adToast('Quiz dihapus.','ok'); loadQuizGrid(); }catch(e){}
+}
+async function deleteCurrentQuiz(){
+  if(!currentQuiz)return;
+  if(!confirm(`Hapus quiz "${currentQuiz.title}"?`))return;
+  try{ await apiFetch(`/api/quizzes/${currentQuiz.id}`,{method:'DELETE'}); adToast('Quiz dihapus.','ok'); currentQuiz=null; goPage('quizzes',document.getElementById('nav-quizzes')); }catch(e){}
+}
+
+// ── Buat Quiz Baru ──
+function openNewQuiz(){ document.getElementById('nq-mapel').value=''; document.getElementById('nq-kelas').value=''; document.getElementById('nq-title').value=''; openModal('modal-quiz'); setTimeout(()=>document.getElementById('nq-mapel').focus(),100); }
+async function saveNewQuiz(){
+  const mapel=document.getElementById('nq-mapel').value.trim(), kelas=document.getElementById('nq-kelas').value.trim(), title=document.getElementById('nq-title').value.trim();
+  if(!mapel){adToast('Mata Pelajaran kosong!','err');return;}
+  if(!kelas){adToast('Kelas kosong!','err');return;}
+  if(!title){adToast('Nama Kuis kosong!','err');return;}
+  const desc=`${mapel} — Kelas ${kelas}`;
+  try{
+    const nq=await apiFetch('/api/quizzes',{method:'POST',body:JSON.stringify({title,description:desc,questions:[]})});
+    closeModal('modal-quiz'); adToast(`Quiz "${title}" berhasil dibuat!`,'ok');
+    await loadQuizGrid(); if(nq&&nq.id) openQuizDetail(nq.id);
+  }catch(e){}
+}
+
+// ── Data Siswa ──
+async function loadStudents(){
+  const el=document.getElementById('students-table'); el.innerHTML='<div class="loading">Memuat...</div>';
+  try{
+    const ss=await apiFetch('/api/sessions'); const fin=ss.filter(s=>s.finished_at);
+    if(!fin.length){el.innerHTML=emptyHtml('Belum ada siswa selesai quiz.');return;}
+    el.innerHTML=tableHtml(['Nama','Quiz','Nilai','Skor','Waktu Selesai'],fin.map(s=>{
+      const pct=Math.round(s.score/s.total*100); const g=gradeOf(pct);
+      return `<tr><td><b>${esc(s.student_name)}</b></td><td><span class="badge badge-blue">${esc(s.quiz_title)}</span></td><td><span class="grade g${g}">${g}</span> <b>${pct}%</b></td><td>${s.score}/${s.total}</td><td style="color:var(--muted);font-size:12px">${fmtDate(s.finished_at)}</td></tr>`;
+    }));
+    applyArabicFont(el);
+  }catch(e){}
+}
+
+// ── Hasil Ujian ──
+async function populateResultFilter(){
+  try{
+    quizList=await apiFetch('/api/quizzes'); const sel=document.getElementById('res-filter-quiz'); const cur=sel.value;
+    sel.innerHTML='<option value="">Semua Quiz</option>'+quizList.map(q=>`<option value="${q.id}"${q.id==cur?' selected':''}>${esc(q.title)}</option>`).join('');
+  }catch(e){}
+}
+async function loadResults(){
+  const el=document.getElementById('results-table'); el.innerHTML='<div class="loading">Memuat...</div>';
+  try{
+    const fq=document.getElementById('res-filter-quiz')?.value;
+    let ss=await apiFetch('/api/sessions'); if(fq) ss=ss.filter(s=>s.quiz_id==fq);
+    const fin=ss.filter(s=>s.finished_at);
+    if(!fin.length){el.innerHTML=emptyHtml('Belum ada hasil ujian');return;}
+    el.innerHTML=tableHtml(['Nama','Quiz','Nilai','Skor','Waktu Selesai'],fin.map(s=>{
+      const pct=Math.round(s.score/s.total*100); const g=gradeOf(pct);
+      return `<tr><td><b>${esc(s.student_name)}</b></td><td><span class="badge badge-blue">${esc(s.quiz_title)}</span></td><td><span class="grade g${g}">${g}</span> <b>${pct}%</b></td><td>${s.score}/${s.total}</td><td style="color:var(--muted);font-size:12px">${fmtDate(s.finished_at)}</td></tr>`;
+    }));
+    applyArabicFont(el);
+  }catch(e){}
+}
+
+// ── Leaderboard ──
+async function populateLbSel(){
+  try{
+    quizList=await apiFetch('/api/quizzes'); const sel=document.getElementById('lb-sel'); const cur=sel.value;
+    sel.innerHTML='<option value="">— Pilih Quiz —</option>'+quizList.map(q=>`<option value="${q.id}"${q.id==cur?' selected':''}>${esc(q.title)}</option>`).join('');
+    if(cur)loadLeaderboard();
+  }catch(e){}
+}
+async function loadLeaderboard(){
+  const id=document.getElementById('lb-sel').value; const el=document.getElementById('lb-table');
+  const btnPrint=document.getElementById('btn-print-lb');
+  if(!id){el.innerHTML=emptyHtml('Pilih quiz untuk melihat peringkat');btnPrint.style.display='none';return;}
+  el.innerHTML='<div class="loading">Memuat...</div>'; btnPrint.style.display='none';
+  try{
+    const data=await apiFetch(`/api/leaderboard/${id}`);
+    if(!data.length){el.innerHTML=emptyHtml('Belum ada yang mengerjakan quiz ini');return;}
+    const medals=['🥇','🥈','🥉'];
+    const quizName=document.getElementById('lb-sel').selectedOptions[0]?.text||'Quiz';
+    el.innerHTML=`<div class="print-header"><h2>🏆 Papan Ranking</h2><p>${esc(quizName)} &nbsp;|&nbsp; Dicetak: ${new Date().toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'})}</p></div>`
+      +tableHtml(['Peringkat','Nama','Nilai','Skor','Waktu Selesai'],data.map((s,i)=>{
+      const g=gradeOf(s.percentage); const rk=i<3?`<span class="rank-num r${i+1}">${medals[i]}</span>`:`<span class="rank-num">${i+1}</span>`;
+      return `<tr><td>${rk}</td><td><b>${esc(s.student_name)}</b></td><td><span class="grade g${g}">${g}</span> <b>${s.percentage}%</b></td><td>${s.score}/${s.total}</td><td style="color:var(--muted);font-size:12px">${fmtDate(s.finished_at)}</td></tr>`;
+    }));
+    btnPrint.style.display='inline-flex';
+  }catch(e){}
+}
+
+// ── Cetak ──
+function printPage(section){
+  // Siapkan judul dan subtitle untuk header cetak di Data Siswa & Hasil Ujian
+  if(section==='students'){
+    const hdr=document.querySelector('#page-students .print-header');
+    if(hdr){ hdr.querySelector('h2').textContent='👨‍🎓 Data Siswa';
+      hdr.querySelector('p').textContent='Dicetak: '+new Date().toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'}); }
+  } else if(section==='results'){
+    const sel=document.getElementById('res-filter-quiz');
+    const quizName=sel.value?(sel.selectedOptions[0]?.text||''):'Semua Quiz';
+    const hdr=document.querySelector('#page-results .print-header');
+    if(hdr){ hdr.querySelector('h2').textContent='📋 Hasil Ujian';
+      hdr.querySelector('p').textContent=quizName+' | Dicetak: '+new Date().toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'}); }
+  }
+  // Tandai halaman target lalu print
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('print-target'));
+  document.getElementById('page-'+section).classList.add('print-target');
+  window.print();
+  // Bersihkan setelah print dialog tutup
+  setTimeout(()=>document.querySelectorAll('.page').forEach(p=>p.classList.remove('print-target')),1000);
+}
+
+
+// ── Import CSV ──
+function dzDrag(e,id){e.preventDefault();document.getElementById(id).classList.add('drag');}
+function dzLeave(id){document.getElementById(id).classList.remove('drag');}
+function dzDropSoal(e){e.preventDefault();document.getElementById('dz-soal').classList.remove('drag');const f=e.dataTransfer.files[0];if(f)processImportFile(f);}
+function handleImportSoal(e){const f=e.target.files[0];if(f)processImportFile(f);}
+
+function processImportFile(file){
+  if(!file.name.endsWith('.csv')){adToast('Gunakan format CSV (.csv)','err');return;}
+  const reader=new FileReader();
+  reader.onload=function(ev){
+    const bytes=new Uint8Array(ev.target.result);
+    let encoding='UTF-8';
+    if(bytes[0]===0xFF&&bytes[1]===0xFE)encoding='UTF-16LE';
+    else if(bytes[0]===0xFE&&bytes[1]===0xFF)encoding='UTF-16BE';
+    else{ const test=new TextDecoder('UTF-8').decode(bytes); if(test.includes('\uFFFD'))encoding='windows-1256'; }
+    let text; try{text=new TextDecoder(encoding).decode(bytes);}catch(e){text=new TextDecoder('UTF-8').decode(bytes);}
+    if(text.charCodeAt(0)===0xFEFF)text=text.slice(1);
+    const rows=parseCSV(text);
+    if(!rows.length){adToast('File kosong atau format tidak valid!','err');return;}
+    const allText=JSON.stringify(rows);
+    if(/\?{3,}/.test(allText)&&!/[\u0600-\u06FF]/.test(allText)){
+      document.getElementById('soal-preview').innerHTML=`<div style="background:#FFEBEE;border:1.5px solid #EF9A9A;border-radius:10px;padding:14px;font-size:13px;color:#B71C1C;margin-top:12px"><b>❌ Teks Arab rusak!</b> File disimpan sebagai CSV biasa, bukan UTF-8 BOM. Buka ulang di Excel → Save As → <b>CSV UTF-8 (dengan BOM)</b>.</div>`;
+      document.getElementById('soal-import-actions').style.display='none'; return;
+    }
+    importedSoal=rows;
+    renderPreview('soal-preview',rows.slice(0,5));
+    const act=document.getElementById('soal-import-actions'); act.style.display='flex';
+    document.getElementById('soal-import-info').textContent=`${rows.length} baris ditemukan`;
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function parseCSV(text){
+  if(text.charCodeAt(0)===0xFEFF)text=text.slice(1);
+  const firstNl=text.indexOf('\n'); const fl=firstNl>-1?text.slice(0,firstNl):text;
+  const delim=(fl.split(';').length>fl.split(',').length)?';':',';
+  const records=[]; let field='',inQ=false,row=[];
+  for(let i=0;i<text.length;i++){
+    const ch=text[i],nx=text[i+1];
+    if(inQ){if(ch==='"'&&nx==='"'){field+='"';i++;}else if(ch==='"')inQ=false;else field+=ch;}
+    else{if(ch==='"')inQ=true;else if(ch===delim){row.push(field.trim());field='';}else if(ch==='\n'||(ch==='\r'&&nx==='\n')){if(ch==='\r')i++;row.push(field.trim());field='';if(row.some(v=>v))records.push(row);row=[];}else if(ch==='\r'){row.push(field.trim());field='';if(row.some(v=>v))records.push(row);row=[];}else field+=ch;}
+  }
+  row.push(field.trim());if(row.some(v=>v))records.push(row);
+  if(records.length<2)return[];
+  const headers=records[0].map(h=>h.replace(/^"|"$/g,'').toLowerCase().trim());
+  return records.slice(1).map(vals=>{const obj={};headers.forEach((h,i)=>obj[h]=(vals[i]||'').replace(/^"|"$/g,'').trim());return obj;}).filter(r=>Object.values(r).some(v=>v));
+}
+
+function renderPreview(elId,rows){
+  if(!rows.length)return;
+  const cols=Object.keys(rows[0]);
+  document.getElementById(elId).innerHTML=`<div class="preview-table">${tableHtml(cols,rows.map(r=>`<tr>${cols.map(c=>`<td>${esc(r[c]||'')}</td>`).join('')}</tr>`))}</div><p style="font-size:12px;color:var(--muted);margin-top:6px">Pratinjau ${rows.length} baris pertama</p>`;
+  applyArabicFont(document.getElementById(elId));
+}
+
+async function doImportSoal(){
+  if(!importedSoal||!currentQuiz)return;
+  const mapped=importedSoal.map(r=>{
+    const type=(r.tipe||r.type||'pg').toLowerCase().trim();
+    const base={ question_type:type, question_text:r.pertanyaan||r.question_text||r.soal||'', explanation:r.penjelasan||r.explanation||'' };
+    if(type==='menjodohkan'){
+      // Format CSV menjodohkan: kolom a=kiri1|kiri2|kiri3, b=kanan1|kanan2|kanan3
+      const lefts=(r.a||'').split('|').map(s=>s.trim()).filter(Boolean);
+      const rights=(r.b||'').split('|').map(s=>s.trim()).filter(Boolean);
+      const pairs=lefts.map((l,i)=>({left:l,right:rights[i]||''})).filter(p=>p.left&&p.right);
+      return {...base, option_a:JSON.stringify(pairs), option_b:'', option_c:'', option_d:'', correct_answer:pairs.map((_,i)=>i).join(',')};
+    } else if(type==='isian'){
+      return {...base, option_a:'', option_b:'', option_c:'', option_d:'', correct_answer:r.jawaban||r.kunci||''};
+    } else if(type==='tf'){
+      const ans=(r.jawaban||r.kunci||'A').toUpperCase()==='B'||['salah','false','b'].includes((r.jawaban||'').toLowerCase())?'B':'A';
+      return {...base, option_a:'Benar', option_b:'Salah', option_c:'', option_d:'', correct_answer:ans};
+    }
+    // pg & pgk
+    return {...base, option_a:r.a||'', option_b:r.b||'', option_c:r.c||'', option_d:r.d||'', correct_answer:(r.jawaban||r.kunci||'A').toUpperCase()};
+  }).filter(q=>q.question_text);
+  if(!mapped.length){adToast('Tidak ada soal valid!','err');return;}
+  try{
+    await apiFetch(`/api/quizzes/${currentQuiz.id}/questions/bulk`,{method:'POST',body:JSON.stringify({questions:mapped})});
+    adToast(`${mapped.length} soal berhasil diimport!`,'ok'); resetImport();
+    const r=await apiFetch(`/api/quizzes/${currentQuiz.id}`); currentQuiz=r; renderDetailSoal(currentQuiz.questions||[]);
+    switchTab('soal',document.getElementById('tab-soal'));
+  }catch(e){}
+}
+
+function resetImport(){ importedSoal=null; document.getElementById('soal-preview').innerHTML=''; document.getElementById('soal-import-actions').style.display='none'; document.getElementById('soal-import-info').textContent=''; }
+
+function downloadSoalTemplate(){
+  const bom='\uFEFF';
+  const csv=bom+`tipe,pertanyaan,a,b,c,d,jawaban,penjelasan
+pg,"Berapakah 2 + 2?","3","4","5","6","B","Penjumlahan dasar"
+pgk,"Manakah bilangan prima? (pilih semua yang benar)","2","3","4","5","ABD","2, 3, dan 5 adalah bilangan prima"
+tf,"Matahari terbit dari arah timur.","","","","","A","Benar, matahari terbit dari timur"
+menjodohkan,"Jodohkan negara dengan ibu kotanya","Indonesia|Jepang|Prancis","Jakarta|Tokyo|Paris","","","","Pasangan ibu kota negara"
+isian,"Ibu kota Indonesia adalah...","","","","","Jakarta|jakarta","Jakarta adalah ibu kota Indonesia"`;
+  dlFile('template_soal_v5.csv',csv,'text/csv;charset=utf-8');
+}
+
+// ── Modal ──
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.overlay').forEach(ov=>ov.addEventListener('click',e=>{if(e.target===ov)ov.classList.remove('open');}));
+
+// ── Auto refresh ──
+setInterval(()=>{ if(document.getElementById('page-dashboard').classList.contains('active')){loadStats();loadRecent();} },10000);
+
+// ── Init ──
+loadStats(); loadRecent();
+</script>
+</body>
+</html>
