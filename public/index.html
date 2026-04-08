@@ -1,603 +1,106 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>QuizChat</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZyIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMyNUQzNjYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMDc1RTU0Ii8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8IS0tIENoYXQgYnViYmxlIHNoYXBlIC0tPgogIDxwYXRoIGQ9Ik0xMCAxMCBRMTAgMTAgOTAgMTAgUTkwIDEwIDkwIDY1IFE5MCA2NSA1NSA2NSBMNDAgODUgTDQwIDY1IFExMCA2NSAxMCA2NSBRMTAgNjUgMTAgMTAgWiIgZmlsbD0idXJsKCNnKSIvPgogIDwhLS0gTGV0dGVyIFEgLS0+CiAgPHRleHQgeD0iNTAiIHk9IjUyIiBmb250LWZhbWlseT0iQXJpYWwgQmxhY2ssIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iOTAwIiBmb250LXNpemU9IjQ0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSI+UTwvdGV4dD4KPC9zdmc+">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--gd:#075E54;--gm:#128C7E;--gl:#25D366;--bgc:#E5DDD5;--bin:#FFFFFF;--bout:#DCF8C6;--txt:#111B21;--mut:#667781;--bdr:#E9EDEF}
-html,body{height:100%}
-body{font-family:'Inter','Amiri',-apple-system,sans-serif;background:#0d0d0d;display:flex;align-items:center;justify-content:center;min-height:100vh}
-.app{position:relative;width:100%;max-width:430px;height:100dvh;max-height:860px;background:var(--bgc);display:flex;flex-direction:column;overflow:hidden;box-shadow:0 0 80px rgba(0,0,0,.8);border-radius:20px}
-@media(max-width:440px){.app{border-radius:0;max-height:100dvh}}
-/* Landing */
-#screen-landing{position:absolute;inset:0;z-index:200;background:linear-gradient(160deg,#075E54 0%,#0a8c7c 55%,#128C7E 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 22px}
-.brand{display:flex;flex-direction:column;align-items:center;margin-bottom:28px}
-.brand-ico{width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;margin-bottom:12px;box-shadow:0 8px 28px rgba(0,0,0,.25)}
-.brand-ico svg{width:38px;height:38px;fill:white}
-.brand h1{color:#fff;font-size:26px;font-weight:700}
-.brand p{color:rgba(255,255,255,.7);font-size:13px;margin-top:3px}
-.card{background:#fff;border-radius:20px;padding:26px 22px;width:100%;max-width:360px;box-shadow:0 20px 60px rgba(0,0,0,.4)}
-.card h3{font-size:15px;font-weight:700;color:var(--txt);margin-bottom:18px;text-align:center}
-.fld{margin-bottom:14px}
-.fld label{display:block;font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--mut);margin-bottom:5px}
-.fld select{width:100%;padding:12px 14px;border:1.5px solid var(--bdr);border-radius:10px;font-size:14px;font-family:inherit;color:var(--txt);outline:none;background:#fff;transition:border-color .2s}
-.fld select:focus{border-color:var(--gm)}
-.err{color:#c62828;font-size:12px;margin:6px 0 10px;text-align:center;min-height:14px}
-.btn-start{width:100%;padding:13px;background:var(--gd);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 14px rgba(7,94,84,.4);transition:background .2s,transform .1s}
-.btn-start:hover{background:var(--gm)}
-.btn-start:active{transform:scale(.97)}
-.btn-start svg{width:18px;height:18px;fill:white}
-/* Header */
-.hdr{height:58px;background:var(--gd);display:flex;align-items:center;gap:12px;padding:0 14px;flex-shrink:0;position:relative;z-index:10}
-.hdr-ava{width:42px;height:42px;border-radius:50%;background:transparent;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0;box-shadow:0 1px 4px rgba(0,0,0,.25)}
-.hdr-ava svg{width:42px;height:42px;}
-.hdr-txt{flex:1;overflow:hidden}
-.hdr-name{color:#fff;font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hdr-sub{color:rgba(255,255,255,.72);font-size:12px;margin-top:1px}
-.prog-track{position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,255,255,.18)}
-.prog-fill{height:100%;background:var(--gl);transition:width .5s ease;width:0%}
-/* Messages */
-.msgs{flex:1;overflow-y:auto;overflow-x:hidden;padding:10px 10px 6px;display:flex;flex-direction:column;gap:3px;scroll-behavior:smooth;background-color:var(--bgc);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='15' cy='15' r='1.1' fill='%23c2af9c' opacity='0.45'/%3E%3Ccircle cx='45' cy='15' r='1.1' fill='%23c2af9c' opacity='0.45'/%3E%3Ccircle cx='15' cy='45' r='1.1' fill='%23c2af9c' opacity='0.45'/%3E%3Ccircle cx='45' cy='45' r='1.1' fill='%23c2af9c' opacity='0.45'/%3E%3C/svg%3E")}
-.msgs::-webkit-scrollbar{width:3px}
-.msgs::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:2px}
-.date-chip{text-align:center;margin:8px 0}
-.date-chip span{background:rgba(255,255,255,.88);color:var(--mut);font-size:11px;padding:4px 12px;border-radius:16px;box-shadow:0 1px 2px rgba(0,0,0,.1)}
-.bwrap{display:flex;flex-direction:column;animation:pop .22s cubic-bezier(.175,.885,.32,1.275)}
-@keyframes pop{from{opacity:0;transform:scale(.93) translateY(5px)}to{opacity:1;transform:scale(1) translateY(0)}}
-.bwrap.in{align-items:flex-start}
-.bwrap.out{align-items:flex-end}
-.sender-lbl{font-size:12px;font-weight:600;color:var(--gm);margin:0 0 2px 14px}
-.bubble{max-width:86%;padding:8px 12px 5px;border-radius:8px;box-shadow:0 1px 1px rgba(0,0,0,.12);word-break:break-word;line-height:1.45}
-.bubble.in{background:var(--bin);border-top-left-radius:2px}
-.bubble.out{background:var(--bout);border-top-right-radius:2px}
-.bubble.wide{max-width:94%}
-.bbody{font-size:14px;color:var(--txt)}
-.bbody b{font-weight:600}
-.bbody small{font-size:12px;color:#666}
-.btime{font-size:10px;color:var(--mut);text-align:right;margin-top:3px;display:flex;align-items:center;justify-content:flex-end;gap:2px}
-.tick{color:#53bdeb;font-size:11px}
-.bubble.vcorrect{background:#d2f8d2}
-.bubble.vwrong{background:#fde8e8}
-.bubble.vpartial{background:#FEF3C7}
-.bubble.vtip{background:#FFFDE7;border-left:3px solid #F9A825}
-.bubble.vresult{background:linear-gradient(145deg,var(--gd),var(--gm));max-width:93%;text-align:center}
-.bubble.vresult .bbody{color:#fff}
-.bubble.vresult .btime{color:rgba(255,255,255,.6)}
-/* Soal bubble */
-.q-num{font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--gm);margin-bottom:4px;display:flex;align-items:center;gap:6px}
-.q-type-tag{font-size:10px;padding:1px 7px;border-radius:10px;font-weight:700}
-.tag-pg{background:#DBEAFE;color:#1D4ED8}
-.tag-pgk{background:#EDE9FE;color:#5B21B6}
-.tag-tf{background:#DCFCE7;color:#15803D}
-.tag-menjodohkan{background:#FEF3C7;color:#92400E}
-.tag-isian{background:#FCE7F3;color:#9D174D}
-.q-text{font-size:14px;font-weight:500;color:var(--txt);line-height:1.5;margin-bottom:12px}
-/* Options PG */
-.opts{display:flex;flex-direction:column;gap:7px}
-.opt{padding:10px 12px;background:#f5f5f5;border:1.5px solid #dde9dd;border-radius:9px;cursor:pointer;font-size:13px;font-family:inherit;text-align:left;display:flex;gap:8px;align-items:flex-start;line-height:1.4;transition:all .15s;-webkit-tap-highlight-color:transparent;width:100%}
-.opt:hover:not(:disabled){background:#edfaed;border-color:var(--gl);transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,0,0,.08)}
-.opt:active:not(:disabled){transform:scale(.97)}
-.opt-k{font-weight:700;color:var(--gd);flex-shrink:0;min-width:18px}
-.opt.ok{background:#d2f8d2;border-color:#2e7d32!important}
-.opt.bad{background:#fde8e8;border-color:#c62828!important}
-.opt.partial-ok{background:#FEF3C7;border-color:#D97706!important}
-.opt:disabled{cursor:default}
-/* Checkbox PGK */
-.pgk-opts{display:flex;flex-direction:column;gap:7px;margin-bottom:10px}
-.pgk-opt{padding:10px 12px;background:#f5f5f5;border:1.5px solid #dde9dd;border-radius:9px;cursor:pointer;font-size:13px;font-family:inherit;text-align:left;display:flex;gap:8px;align-items:center;line-height:1.4;transition:all .15s;-webkit-tap-highlight-color:transparent;width:100%;user-select:none}
-.pgk-opt:hover:not(.disabled){background:#edfaed;border-color:var(--gl)}
-.pgk-opt.selected{background:#DBEAFE;border-color:#3B82F6}
-.pgk-opt.ok{background:#d2f8d2;border-color:#2e7d32!important}
-.pgk-opt.partial-ok{background:#FEF3C7;border-color:#D97706!important}
-.pgk-opt.bad{background:#fde8e8;border-color:#c62828!important}
-.pgk-opt.disabled{cursor:default}
-.pgk-checkbox{width:18px;height:18px;border:2px solid #aaa;border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
-.pgk-opt.selected .pgk-checkbox{background:#3B82F6;border-color:#3B82F6;color:#fff}
-.pgk-submit{margin-top:6px;padding:10px;background:var(--gd);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;width:100%;transition:background .2s}
-.pgk-submit:hover{background:var(--gm)}
-.pgk-submit:disabled{background:#ccc;cursor:default}
-/* Benar/Salah */
-.tf-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.tf-opt{padding:14px;background:#f5f5f5;border:1.5px solid #dde9dd;border-radius:9px;cursor:pointer;font-size:14px;font-weight:600;font-family:inherit;text-align:center;transition:all .15s}
-.tf-opt:hover:not(:disabled){background:#edfaed;border-color:var(--gl);transform:translateY(-1px)}
-.tf-opt.ok{background:#d2f8d2;border-color:#2e7d32!important}
-.tf-opt.bad{background:#fde8e8;border-color:#c62828!important}
-.tf-opt:disabled{cursor:default}
-/* Menjodohkan */
-.match-container{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
-.match-col-lbl{font-size:11px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
-.match-left-list,.match-right-list{display:flex;flex-direction:column;gap:6px}
-.match-left-item{padding:9px 12px;background:#E0E7FF;border:1.5px solid #A5B4FC;border-radius:8px;font-size:12px;font-weight:600;color:#3730a3;cursor:pointer;transition:all .15s;position:relative}
-.match-left-item.selected{background:#4F46E5;color:#fff;border-color:#4338CA}
-.match-left-item.matched{background:#DCFCE7;border-color:#86EFAC;color:#166534;cursor:default}
-.match-left-item.wrong{background:#fde8e8;border-color:#c62828;color:#c62828}
-.match-right-item{padding:9px 12px;background:#FFF7ED;border:1.5px solid #FCD34D;border-radius:8px;font-size:12px;font-weight:600;color:#92400E;cursor:pointer;transition:all .15s}
-.match-right-item:hover:not(.matched):not(.wrong){background:#FEF3C7;transform:translateY(-1px)}
-.match-right-item.matched{background:#DCFCE7;border-color:#86EFAC;color:#166534;cursor:default}
-.match-right-item.wrong{background:#fde8e8;border-color:#c62828;color:#c62828}
-.match-submit{margin-top:6px;padding:10px;background:var(--gd);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;width:100%;transition:background .2s}
-.match-submit:hover{background:var(--gm)}
-/* Isian */
-.isian-form{display:flex;flex-direction:column;gap:8px}
-.isian-input{padding:11px 14px;border:1.5px solid #dde9dd;border-radius:9px;font-size:14px;font-family:inherit;color:var(--txt);outline:none;background:#f5f5f5;transition:border-color .2s;width:100%}
-.isian-input:focus{border-color:var(--gl);background:#fff}
-.isian-input:disabled{background:#eee;color:#999}
-.isian-submit{padding:10px;background:var(--gd);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;transition:background .2s}
-.isian-submit:hover{background:var(--gm)}
-.isian-submit:disabled{background:#ccc;cursor:default}
-/* Result */
-.rgrade{width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;margin:8px auto 10px}
-.rstats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
-.rcell{background:rgba(255,255,255,.15);border-radius:10px;padding:10px 6px;text-align:center}
-.rv{font-size:22px;font-weight:800;color:#fff;line-height:1}
-.rl{font-size:10px;color:rgba(255,255,255,.75);margin-top:3px}
-/* Typing */
-.typing{display:flex;align-items:center;padding:4px 10px 6px;height:0;overflow:hidden;transition:height .2s}
-.typing.on{height:42px}
-.tdots{background:var(--bin);border-radius:14px;padding:9px 14px;display:flex;gap:5px;box-shadow:0 1px 1px rgba(0,0,0,.1)}
-.tdots span{width:7px;height:7px;background:#bbb;border-radius:50%;animation:tdot 1.2s ease-in-out infinite}
-.tdots span:nth-child(2){animation-delay:.2s}
-.tdots span:nth-child(3){animation-delay:.4s}
-@keyframes tdot{0%,80%,100%{transform:scale(.7);opacity:.5}40%{transform:scale(1);opacity:1}}
-/* Input bar */
-.ibar{height:66px;background:#F0F2F5;padding:8px 10px;display:flex;align-items:center;gap:8px;flex-shrink:0}
-.ifield{flex:1;background:#fff;border:none;border-radius:24px;padding:11px 18px;font-size:14px;font-family:inherit;color:var(--txt);outline:none;box-shadow:0 1px 3px rgba(0,0,0,.08);transition:box-shadow .2s}
-.ifield::placeholder{color:#aaa}
-.ifield:focus{box-shadow:0 2px 8px rgba(18,140,126,.2)}
-.ifield:disabled{background:#eee;color:#aaa}
-.sbtn{width:46px;height:46px;border-radius:50%;background:var(--gd);border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.2);transition:background .2s,transform .1s}
-.sbtn:hover{background:var(--gl)}
-.sbtn:active{transform:scale(.92)}
-.sbtn:disabled{background:#ccc;cursor:default;transform:none}
-.sbtn svg{width:20px;height:20px;fill:white}
-/* Toast */
-.toast{position:absolute;top:68px;left:50%;transform:translateX(-50%) translateY(-8px);background:rgba(0,0,0,.78);color:#fff;font-size:13px;padding:8px 18px;border-radius:20px;opacity:0;pointer-events:none;transition:all .25s;white-space:nowrap;z-index:300}
-.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
-.scroll-dn{position:absolute;bottom:76px;right:14px;width:36px;height:36px;border-radius:50%;background:var(--gd);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3);opacity:0;transition:opacity .2s;z-index:20}
-.scroll-dn svg{width:18px;height:18px;fill:white}
-.scroll-dn.on{opacity:1}
-.eburst{position:absolute;font-size:28px;pointer-events:none;z-index:400;animation:fup .9s ease forwards}
-@keyframes fup{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-70px) scale(1.4)}}
-/* Arabic */
-.bubble-arabic .bbody,.bubble-arabic .q-text{font-family:'Amiri',serif;direction:rtl;text-align:right;line-height:1.9;font-size:15px;unicode-bidi:bidi-override}
-.bubble-arabic .opt,.bubble-arabic .pgk-opt,.bubble-arabic .tf-opt,.bubble-arabic .match-left-item,.bubble-arabic .match-right-item{font-family:'Amiri',serif;font-size:14px;line-height:1.8}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siswa - QuizChat</title>
+    <style>
+        body { font-family: sans-serif; background: #E5DDD5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background: white; width: 90%; max-width: 400px; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #075E54; margin-bottom: 25px; }
+        .fld { margin-bottom: 15px; }
+        label { font-size: 12px; color: #667781; font-weight: bold; display: block; margin-bottom: 5px; }
+        select, input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .btn { width: 100%; padding: 14px; background: #075E54; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .error { color: red; font-size: 12px; text-align: center; margin-top: 10px; }
+        .quiz-card { background: #f9f9f9; padding: 15px; border-left: 5px solid #25D366; margin-bottom: 10px; border-radius: 5px; cursor: pointer; }
+    </style>
 </head>
 <body>
-<div class="app" id="app">
-  <div id="screen-landing">
-    <div class="brand">
-      <div class="brand-ico"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M10 10 Q10 10 90 10 Q90 10 90 65 Q90 65 55 65 L40 85 L40 65 Q10 65 10 65 Q10 65 10 10 Z" fill="white" opacity="0.95"/><text x="50" y="52" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="44" text-anchor="middle" fill="#075E54">Q</text></svg></div>
-      <h1>QuizChat</h1><p>Belajar seru seperti chat!</p>
-    </div>
-    <div class="card">
-      <h3>Pilih Quiz</h3>
-      <div class="fld"><label>Quiz yang tersedia</label><select id="inp-quiz"><option value="">⏳ Memuat...</option></select></div>
-      <div class="err" id="err-msg"></div>
-      <button class="btn-start" onclick="doStart()"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Mulai</button>
-    </div>
-  </div>
-
-  <div class="hdr">
-    <div class="hdr-ava" style="background:linear-gradient(135deg,#25D366,#075E54);overflow:hidden;border-radius:50%;">
-      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:38px;height:38px;">
-        <path d="M10 10 Q10 10 90 10 Q90 10 90 65 Q90 65 55 65 L40 85 L40 65 Q10 65 10 65 Q10 65 10 10 Z" fill="white" opacity="0.95"/>
-        <text x="50" y="52" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="44" text-anchor="middle" fill="#075E54">Q</text>
-      </svg>
-    </div>
-    <div class="hdr-txt"><div class="hdr-name" id="hdr-name">QuizBot</div><div class="hdr-sub" id="hdr-sub">Pilih quiz untuk mulai</div></div>
-    <div class="prog-track"><div class="prog-fill" id="prog"></div></div>
-  </div>
-
-  <div class="msgs" id="msgs"><div class="date-chip"><span id="date-lbl">Hari ini</span></div></div>
-  <div class="typing" id="typing"><div class="tdots"><span></span><span></span><span></span></div></div>
-  <div class="ibar">
-    <input class="ifield" id="inp-ans" placeholder="Ketik di sini..." disabled>
-    <button class="sbtn" id="sbtn" disabled onclick="onSend()"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
-  </div>
-  <div class="toast" id="toast"></div>
-  <div class="scroll-dn" id="sdn" onclick="scrollBot()"><svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg></div>
-</div>
-
-<script src="/socket.io/socket.io.js"></script>
-<script>
-const socket = io({ transports:['websocket','polling'] });
-let STATE='idle', myName='', myClass='', myQuizId=null, curQ=null, qActive=false, curQN=0;
-// State untuk tipe soal interaktif
-let pgkSelected=new Set(); // jawaban terpilih PGK
-let matchState={ selectedLeft:null, matches:{} }; // state menjodohkan
-
-const TYPE_TAGS={ pg:'📝 PG', pgk:'☑️ PG Kompleks', tf:'✅ Benar/Salah', menjodohkan:'🔗 Menjodohkan', isian:'✏️ Isian' };
-const TYPE_CSS={ pg:'tag-pg', pgk:'tag-pgk', tf:'tag-tf', menjodohkan:'tag-menjodohkan', isian:'tag-isian' };
-
-(async()=>{
-  try{
-    const r=await fetch('/api/quizzes'); const qs=await r.json();
-    const sel=document.getElementById('inp-quiz');
-    if(!qs.length){sel.innerHTML='<option value="">Belum ada quiz</option>';return;}
-    sel.innerHTML='<option value="">— Pilih Quiz —</option>'+qs.map(q=>`<option value="${q.id}">${q.title}</option>`).join('');
-  }catch(e){toast('Gagal memuat daftar quiz');}
-})();
-
-function doStart(){
-  const quizId=document.getElementById('inp-quiz').value;
-  const err=document.getElementById('err-msg');
-  if(!quizId){err.textContent='Pilih quiz terlebih dahulu!';return;}
-  err.textContent=''; myQuizId=parseInt(quizId);
-  const l=document.getElementById('screen-landing');
-  l.style.transition='opacity .3s'; l.style.opacity='0';
-  setTimeout(()=>l.style.display='none',300);
-  STATE='ask_name'; showTyping(true);
-  setTimeout(()=>{ showTyping(false); addIn('Halo! Selamat datang di <b>QuizChat</b> 👋<br>Sebelum mulai, boleh tahu <b>nama lengkap</b> kamu siapa?','QuizBot'); enableIn(true,'Ketik nama lengkap kamu...'); },900);
-}
-
-function onSend(){
-  const inp=document.getElementById('inp-ans'); const val=inp.value.trim(); if(!val)return; inp.value='';
-  if(STATE==='ask_name'){
-    myName=val; addOut(val); enableIn(false); STATE='ask_class'; showTyping(true);
-    setTimeout(()=>{ showTyping(false); addIn(`Hai <b>${esc(myName)}</b>! 😊<br>Kamu dari kelas berapa?`,'QuizBot'); enableIn(true,'Contoh: VII A, VIII B, IX C ...'); },800);
-  } else if(STATE==='ask_class'){
-    myClass=val; addOut(val); enableIn(false); STATE='quiz'; showTyping(true);
-    setTimeout(()=>{
-      showTyping(false);
-      addIn(`Keren! <b>${esc(myName)}</b> dari kelas <b>${esc(myClass)}</b>. 🎓<br><br>Selamat mengerjakan quiz! Semoga hasilnya memuaskan. 💪<br>Quiz akan segera dimulai...`,'QuizBot');
-      setTimeout(()=>socket.emit('join_quiz',{studentName:myName+'('+myClass+')',quizId:myQuizId,studentClass:myClass}),1200);
-    },900);
-  } else if(STATE==='quiz' && curQ?.type==='isian'){
-    submitIsian(val);
-  }
-}
-
-document.getElementById('inp-ans').addEventListener('keydown',e=>{
-  if(e.key==='Enter'){e.preventDefault();onSend();return;}
-  if(STATE==='quiz'&&curQ?.type==='pg'){
-    const k=e.key.toUpperCase();
-    if(['A','B','C','D'].includes(k)&&qActive&&curQ){e.preventDefault();document.getElementById('inp-ans').value=k;setTimeout(onSend,50);}
-  }
-});
-
-socket.on('connect',()=>console.log('[socket] connected'));
-socket.on('connect_error',e=>{console.error(e);toast('Koneksi bermasalah!');});
-
-socket.on('quiz_started',({quizTitle,totalQuestions})=>{
-  document.getElementById('hdr-name').textContent=quizTitle;
-  document.getElementById('hdr-sub').textContent=`${totalQuestions} soal`;
-  qActive=true; showTyping(true);
-});
-
-socket.on('question',q=>{
-  showTyping(false); curQ=q; curQN=q.number; qActive=true;
-  pgkSelected=new Set(); matchState={selectedLeft:null,matches:{}};
-  setProg((q.number-1)/q.total);
-  document.getElementById('hdr-sub').textContent=`Soal ${q.number} dari ${q.total}`;
-  renderQuestion(q);
-});
-
-socket.on('answer_feedback',({isCorrect,isPartial,points,correctAnswer,explanation,currentScore,questionNumber,totalQuestions,questionType})=>{
-  disableAllInputs(questionNumber, correctAnswer, isCorrect, isPartial);
-  enableIn(false);
-
-  let fb='';
-  if(isCorrect) fb=`✅ <b>Benar!</b> 🎉<br><small>Skor: ${currentScore}/${questionNumber}</small>`;
-  else if(isPartial) fb=`🟡 <b>Sebagian benar.</b> Nilai +${points}<br><small>Jawaban lengkap: <b>${correctAnswer}</b><br>Skor: ${currentScore}/${questionNumber}</small>`;
-  else fb=`❌ <b>Kurang tepat.</b> Jawaban: <b>${correctAnswer}</b><br><small>Skor: ${currentScore}/${questionNumber}</small>`;
-
-  addIn(fb,'QuizBot',isCorrect?'vcorrect':(isPartial?'vpartial':'vwrong'));
-  burst(isCorrect?'🎉':(isPartial?'🟡':'😅'));
-  if(explanation) setTimeout(()=>addIn(`💡 <b>Penjelasan:</b><br>${esc(explanation)}`,'QuizBot','vtip'),350);
-  setProg(questionNumber/totalQuestions);
-  if(questionNumber<totalQuestions) setTimeout(()=>showTyping(true),explanation?650:400);
-});
-
-socket.on('quiz_finished',({studentName,score,total,percentage,duration,rank,grade})=>{
-  qActive=false; STATE='idle'; setProg(1);
-  document.getElementById('hdr-sub').textContent='Quiz Selesai 🎊';
-  const m=Math.floor(duration/60),s=duration%60; const dur=m?`${m}m ${s}s`:`${s}s`;
-  const em=percentage>=90?'🏆':percentage>=70?'🌟':percentage>=50?'👍':'💪';
-  addIn(`<div style="font-size:11px;opacity:.8;letter-spacing:.5px;margin-bottom:6px">HASIL QUIZ</div>
-    <div class="rgrade">${grade}</div>
-    <div style="font-size:17px;font-weight:700">${em} ${esc(myName)}</div>
-    <div style="font-size:12px;opacity:.8;margin-top:2px">${esc(myClass)}</div>
-    <div class="rstats">
-      <div class="rcell"><div class="rv">${score}</div><div class="rl">Skor</div></div>
-      <div class="rcell"><div class="rv">${total}</div><div class="rl">Total Soal</div></div>
-      <div class="rcell"><div class="rv">${percentage}%</div><div class="rl">Nilai</div></div>
-      <div class="rcell"><div class="rv">${dur}</div><div class="rl">Waktu</div></div>
-    </div>
-    <div style="font-size:11px;opacity:.75;margin-top:4px">🏅 Peringkat ke-${rank}</div>`,'QuizBot','vresult wide');
-  burst(percentage>=70?'🎊':'😊');
-  setTimeout(()=>addIn(`✅ <b>Nilaimu sudah tersimpan!</b><br><div style="background:rgba(0,0,0,.08);border-radius:10px;padding:10px 12px;margin-top:6px;font-size:12.5px;line-height:1.7">📋 <b>Nama:</b> ${esc(myName)}<br>🏫 <b>Kelas:</b> ${esc(myClass)}<br>📊 <b>Nilai:</b> ${percentage}% (${score}/${total})<br>🎓 <b>Grade:</b> ${grade}<br>⏱ <b>Waktu:</b> ${dur}</div>`,'QuizBot','vtip'),1000);
-  const inp=document.getElementById('inp-ans'); const btn=document.getElementById('sbtn');
-  inp.disabled=true; btn.disabled=true; inp.placeholder='✅ Quiz selesai — nilai sudah tersimpan';
-  const hdrSub=document.getElementById('hdr-sub'); hdrSub.innerHTML='✅ Selesai — Nilai Tersimpan'; hdrSub.style.color='#22c55e';
-});
-
-socket.on('error_msg',msg=>{ toast('⚠ '+msg); const l=document.getElementById('screen-landing'); l.style.display='flex'; l.style.opacity='1'; STATE='idle'; });
-
-// ── Render soal berdasarkan tipe ──
-function renderQuestion(q){
-  const w=document.createElement('div'); w.className='bwrap in';
-  const ar=hasArabic(q.text)||(q.options&&Object.values(q.options).some(hasArabic));
-  const typeTag=`<span class="q-type-tag ${TYPE_CSS[q.type]||'tag-pg'}">${TYPE_TAGS[q.type]||q.type}</span>`;
-  let content='';
-
-  if(q.type==='pg'){
-    content=`<div class="q-num">Soal ${q.number} dari ${q.total} ${typeTag}</div>
-      <div class="q-text">${esc(q.text)}</div>
-      <div class="opts" id="opts-${q.number}">
-        ${['A','B','C','D'].map(k=>`<button class="opt" id="opt-${q.number}-${k}" onclick="optClick('${k}')"
-          ><span class="opt-k">${k}.</span><span>${esc(q.options[k])}</span></button>`).join('')}
-      </div>`;
-    enableIn(true,'Ketik A / B / C / D atau klik pilihan');
-
-  } else if(q.type==='pgk'){
-    content=`<div class="q-num">Soal ${q.number} dari ${q.total} ${typeTag}</div>
-      <div class="q-text">${esc(q.text)}</div>
-      <div style="font-size:11px;color:#5B21B6;margin-bottom:8px;font-weight:600">☑️ Pilih ${q.correctCount||'semua'} jawaban yang benar!</div>
-      <div class="pgk-opts" id="opts-${q.number}">
-        ${['A','B','C','D'].map(k=>`<button class="pgk-opt" id="opt-${q.number}-${k}" onclick="pgkToggle('${k}',${q.number})">
-          <span class="pgk-checkbox" id="pgk-cb-${k}">✓</span>
-          <span class="opt-k">${k}.</span><span>${esc(q.options[k])}</span>
-        </button>`).join('')}
-      </div>
-      <button class="pgk-submit" id="pgk-submit-${q.number}" onclick="pgkSubmit(${q.number})" disabled>Kirim Jawaban</button>`;
-    enableIn(false);
-
-  } else if(q.type==='tf'){
-    content=`<div class="q-num">Soal ${q.number} dari ${q.total} ${typeTag}</div>
-      <div class="q-text">${esc(q.text)}</div>
-      <div class="tf-opts" id="opts-${q.number}">
-        <button class="tf-opt" id="opt-${q.number}-A" onclick="tfClick('A',${q.number})">✅ Benar</button>
-        <button class="tf-opt" id="opt-${q.number}-B" onclick="tfClick('B',${q.number})">❌ Salah</button>
-      </div>`;
-    enableIn(false);
-
-  } else if(q.type==='menjodohkan'){
-    const pairs=q.pairs||[];
-    const rights=shuffleArr(pairs.map(p=>p.right));
-    matchState={selectedLeft:null,matches:{},pairs,rights};
-    content=`<div class="q-num">Soal ${q.number} dari ${q.total} ${typeTag}</div>
-      <div class="q-text">${esc(q.text)}</div>
-      <div class="match-container">
-        <div>
-          <div class="match-col-lbl">Kolom A</div>
-          <div class="match-left-list" id="match-left-${q.number}">
-            ${pairs.map((p,i)=>`<div class="match-left-item" id="ml-${q.number}-${i}" onclick="matchClickLeft(${i},${q.number})">${esc(p.left)}</div>`).join('')}
-          </div>
+    <div class="container">
+        <div id="login-screen">
+            <h2>Masuk QuizChat</h2>
+            <div class="fld">
+                <label>Pilih Kelas</label>
+                <select id="sel-class" onchange="loadNames()">
+                    <option value="">-- Pilih Kelas --</option>
+                    <option value="5A">5A</option>
+                    <option value="5B">5B</option>
+                    <option value="6A">6A</option>
+                </select>
+            </div>
+            <div class="fld">
+                <label>Nama Anda</label>
+                <select id="sel-name" disabled>
+                    <option value="">Pilih kelas dulu...</option>
+                </select>
+            </div>
+            <div class="fld">
+                <label>Masukkan NIS (Sebagai Password)</label>
+                <input type="password" id="inp-nis" placeholder="Nomor Induk Siswa">
+            </div>
+            <button class="btn" onclick="doLogin()">Cek Daftar Kuis</button>
+            <div id="err-msg" class="error"></div>
         </div>
-        <div>
-          <div class="match-col-lbl">Kolom B</div>
-          <div class="match-right-list" id="match-right-${q.number}">
-            ${rights.map((r,i)=>`<div class="match-right-item" id="mr-${q.number}-${i}" onclick="matchClickRight(${i},${q.number})" data-val="${esc(r)}">${esc(r)}</div>`).join('')}
-          </div>
+
+        <div id="list-screen" style="display:none">
+            <h3 id="welcome-msg">Halo, Siswa</h3>
+            <p style="color:gray; font-size:14px">Kuis yang tersedia untuk tingkat kelas Anda:</p>
+            <div id="quiz-list"></div>
         </div>
-      </div>
-      <button class="match-submit" id="match-submit-${q.number}" onclick="matchSubmit(${q.number})" disabled>Kirim Jawaban</button>`;
-    enableIn(false);
+    </div>
 
-  } else if(q.type==='isian'){
-    content=`<div class="q-num">Soal ${q.number} dari ${q.total} ${typeTag}</div>
-      <div class="q-text">${esc(q.text)}</div>
-      <div class="isian-form">
-        <input class="isian-input" id="isian-inp-${q.number}" placeholder="Ketik jawaban kamu...">
-        <button class="isian-submit" onclick="isianSubmit(${q.number})">Kirim Jawaban</button>
-      </div>`;
-    enableIn(false);
-    setTimeout(()=>{ const el=document.getElementById(`isian-inp-${q.number}`); if(el)el.focus(); },300);
-  }
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
 
-  w.innerHTML=`<div class="sender-lbl">QuizBot</div>
-    <div class="bubble in wide${ar?' bubble-arabic':''}" id="qb-${q.number}">
-      ${content}
-      <div class="btime" style="margin-top:8px">${ts()}</div>
-    </div>`;
-  ins(w);
-  if(ar) applyAmiri(w);
-}
+        function loadNames() {
+            const cls = document.getElementById('sel-class').value;
+            if(!cls) return;
+            socket.emit('get_students_by_class', cls);
+        }
 
-// ── Interaksi PG ──
-function optClick(k){
-  if(!qActive||!curQ||curQ.type!=='pg')return;
-  addOut(`${k}. ${curQ.options[k]}`);
-  socket.emit('answer',{answer:k});
-  curQ=null; disableAllInputs(curQN); enableIn(false); showTyping(true);
-}
+        socket.on('list_students', (students) => {
+            const sel = document.getElementById('sel-name');
+            sel.disabled = false;
+            sel.innerHTML = '<option value="">-- Pilih Nama --</option>' + 
+                students.map(s => `<option value="${s.nis}">${s.name}</option>`).join('');
+        });
 
-// ── Interaksi PGK ──
-function pgkToggle(k,qNum){
-  const btn=document.getElementById(`opt-${qNum}-${k}`);
-  if(btn.classList.contains('disabled'))return;
-  if(pgkSelected.has(k)){ pgkSelected.delete(k); btn.classList.remove('selected'); btn.querySelector('.pgk-checkbox').textContent=''; }
-  else { pgkSelected.add(k); btn.classList.add('selected'); btn.querySelector('.pgk-checkbox').textContent='✓'; }
-  const sub=document.getElementById(`pgk-submit-${qNum}`);
-  if(sub) sub.disabled=pgkSelected.size===0;
-}
-function pgkSubmit(qNum){
-  if(!qActive||!curQ)return;
-  const answer=[...pgkSelected].sort().join('');
-  if(!answer){toast('Pilih minimal 1 jawaban!');return;}
-  addOut(`Jawaban: ${answer}`);
-  socket.emit('answer',{answer});
-  curQ=null; showTyping(true);
-}
+        function doLogin() {
+            const className = document.getElementById('sel-class').value;
+            const nisInput = document.getElementById('inp-nis').value;
+            const selectedNis = document.getElementById('sel-name').value;
 
-// ── Interaksi Benar/Salah ──
-function tfClick(k,qNum){
-  if(!qActive||!curQ)return;
-  const labels={A:'Benar',B:'Salah'};
-  addOut(labels[k]||k);
-  socket.emit('answer',{answer:k});
-  curQ=null; showTyping(true);
-}
+            if(nisInput !== selectedNis) {
+                document.getElementById('err-msg').textContent = "NIS salah atau tidak sesuai nama!";
+                return;
+            }
 
-// ── Interaksi Menjodohkan ──
-function matchClickLeft(idx,qNum){
-  if(!qActive||!curQ)return;
-  if(matchState.matches[idx]!==undefined)return; // sudah dijodohkan
-  const prev=matchState.selectedLeft;
-  if(prev!==null&&prev!==undefined){
-    const prevEl=document.getElementById(`ml-${qNum}-${prev}`);
-    if(prevEl) prevEl.classList.remove('selected');
-  }
-  matchState.selectedLeft=idx;
-  const el=document.getElementById(`ml-${qNum}-${idx}`); if(el) el.classList.add('selected');
-}
-function matchClickRight(idx,qNum){
-  if(!qActive||!curQ||matchState.selectedLeft===null||matchState.selectedLeft===undefined)return;
-  const rightEl=document.getElementById(`mr-${qNum}-${idx}`);
-  if(rightEl.classList.contains('matched'))return;
-  const leftIdx=matchState.selectedLeft;
-  // Pasangkan
-  matchState.matches[leftIdx]=matchState.rights[idx];
-  const leftEl=document.getElementById(`ml-${qNum}-${leftIdx}`);
-  if(leftEl){ leftEl.classList.remove('selected'); leftEl.classList.add('matched'); leftEl.textContent=`${matchState.pairs[leftIdx].left} → ${matchState.rights[idx]}`; }
-  if(rightEl){ rightEl.classList.add('matched'); }
-  matchState.selectedLeft=null;
-  // Cek apakah semua sudah dijodohkan
-  if(Object.keys(matchState.matches).length===matchState.pairs.length){
-    const sub=document.getElementById(`match-submit-${qNum}`);
-    if(sub) sub.disabled=false;
-  }
-}
-function matchSubmit(qNum){
-  if(!qActive||!curQ)return;
-  // Format jawaban: "kiri1=kanan1,kiri2=kanan2,..."
-  const answer=matchState.pairs.map((_,i)=>`${i+1}=${matchState.matches[i]||''}`).join(',');
-  // Untuk evaluasi server: format "idx=rightVal"
-  const serverAnswer=Object.entries(matchState.matches).map(([i,v])=>`${i}=${v}`).join(',');
-  addOut('Jawaban menjodohkan dikirim ✓');
-  socket.emit('answer',{answer:serverAnswer});
-  curQ=null; showTyping(true);
-}
+            socket.emit('student_login', { nis: nisInput, className });
+        }
 
-// ── Interaksi Isian ──
-function isianSubmit(qNum){
-  const inp=document.getElementById(`isian-inp-${qNum}`);
-  const val=inp?.value.trim();
-  if(!val){toast('Ketik jawaban dulu!');return;}
-  if(!qActive||!curQ)return;
-  addOut(val);
-  socket.emit('answer',{answer:val});
-  if(inp){ inp.disabled=true; }
-  const sub=inp?.nextElementSibling; if(sub) sub.disabled=true;
-  curQ=null; showTyping(true);
-}
-function submitIsian(val){
-  // Dipanggil dari input bar (enter) saat tipe isian
-  if(!qActive||!curQ)return;
-  addOut(val);
-  socket.emit('answer',{answer:val});
-  const inp=document.getElementById(`isian-inp-${curQN}`);
-  if(inp){ inp.value=val; inp.disabled=true; }
-  const sub=inp?.nextElementSibling; if(sub) sub.disabled=true;
-  curQ=null; showTyping(true);
-}
+        socket.on('login_success', ({ student, quizzes }) => {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('list-screen').style.display = 'block';
+            document.getElementById('welcome-msg').textContent = `Halo, ${student.name} (${student.class_name})`;
 
-// ── Disable semua input setelah jawaban ──
-function disableAllInputs(qNum, correctAnswer, isCorrect, isPartial){
-  // PG
-  document.querySelectorAll(`.opt`).forEach(b=>b.disabled=true);
-  // PGK
-  document.querySelectorAll(`.pgk-opt`).forEach(b=>b.classList.add('disabled'));
-  const pgkSub=document.getElementById(`pgk-submit-${qNum}`); if(pgkSub) pgkSub.disabled=true;
-  // TF
-  document.querySelectorAll(`.tf-opt`).forEach(b=>b.disabled=true);
-  // Match
-  document.querySelectorAll(`.match-left-item,.match-right-item`).forEach(b=>b.onclick=null);
-  const matchSub=document.getElementById(`match-submit-${qNum}`); if(matchSub) matchSub.disabled=true;
-  // Isian
-  const isianInp=document.getElementById(`isian-inp-${qNum}`); if(isianInp) isianInp.disabled=true;
-  const isianSub=isianInp?.nextElementSibling; if(isianSub) isianSub.disabled=true;
+            const container = document.getElementById('quiz-list');
+            if(quizzes.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:red">Belum ada kuis untuk kelas Anda.</p>';
+            } else {
+                container.innerHTML = quizzes.map(q => `
+                    <div class="quiz-card" onclick="alert('Memulai kuis: ${q.title}')">
+                        <div style="font-weight:bold">${q.title}</div>
+                        <div style="font-size:12px; color:gray">${q.description || ''}</div>
+                    </div>
+                `).join('');
+            }
+        });
 
-  // Mark jawaban benar PG
-  if(correctAnswer && (isCorrect!==undefined)){
-    const correct=(correctAnswer||'').toUpperCase();
-    // PG
-    const cb=document.getElementById(`opt-${qNum}-${correct}`);
-    if(cb) cb.classList.add('ok');
-    // TF
-    const tb=document.getElementById(`opt-${qNum}-${correct}`);
-    if(tb) tb.classList.add('ok');
-    // PGK: mark semua jawaban benar
-    correct.split('').filter(c=>/[A-D]/.test(c)).forEach(k=>{
-      const el=document.getElementById(`opt-${qNum}-${k}`);
-      if(el){ el.classList.add(pgkSelected.has(k)?'ok':'partial-ok'); }
-    });
-  }
-}
-
-// ── DOM helpers ──
-function ts(){ return new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}); }
-function escRaw(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-function hasArabic(str){ return /[\u0600-\u06FF\u0750-\u077F]/.test(str||''); }
-// esc: jika teks campuran Arab+Latin, wrap segmen Arab dengan <bdi> agar bidi isolation benar
-function esc(s){
-  const raw = String(s||'');
-  if (!hasArabic(raw)) return escRaw(raw);
-  // Deteksi apakah ada karakter non-Arab (campuran)
-  const hasMixed = /[A-Za-z0-9\u00C0-\u024F]/.test(raw);
-  if (!hasMixed) return escRaw(raw); // Arab murni, tidak perlu bdi
-  // Pecah per segmen Arab vs non-Arab, wrap Arab dengan <bdi>
-  return raw.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/([\u0600-\u06FF\u0750-\u077F\u0610-\u061A\u064B-\u065F\u200C\u200D\uFB50-\uFDFF\uFE70-\uFEFF][\u0600-\u06FF\u0750-\u077F\u0610-\u061A\u064B-\u065F\u200C\u200D\uFB50-\uFDFF\uFE70-\uFEFF\s]*)/g,
-      '<span dir="rtl" style="font-family:\'Amiri\',serif;font-size:1.1em;unicode-bidi:bidi-override;display:inline-block;">$1</span>');
-}
-function applyAmiri(root){
-  root.querySelectorAll('.q-text,.bbody,.opt span:last-child,.pgk-opt span:last-child,.tf-opt,.match-left-item,.match-right-item').forEach(el=>{
-    const txt = el.textContent||'';
-    if (!hasArabic(txt)) return;
-    const hasMixed = /[A-Za-z0-9\u00C0-\u024F]/.test(txt);
-    if (hasMixed) {
-      // Teks campuran: container tetap LTR, isolasi per-segmen via span dir=rtl
-      el.style.fontFamily="'Inter','Amiri',serif";
-      el.setAttribute('dir','ltr');
-      el.style.direction='ltr';
-      el.style.textAlign='left';
-      el.style.unicodeBidi='embed';
-      el.style.lineHeight='1.9';
-    } else {
-      // Arab murni: RTL penuh - WAJIB set dir attribute agar bidi algorithm benar
-      el.style.fontFamily="'Amiri',serif";
-      el.setAttribute('dir','rtl');
-      el.style.direction='rtl';
-      el.style.textAlign='right';
-      el.style.lineHeight='1.9';
-      el.style.unicodeBidi='bidi-override';
-    }
-  });
-}
-function shuffleArr(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
-
-function addIn(html,sender,extra=''){
-  const ar=hasArabic(html); const w=document.createElement('div'); w.className='bwrap in';
-  w.innerHTML=`<div class="sender-lbl">${esc(sender)}</div><div class="bubble in ${extra}${ar?' bubble-arabic':''}"><div class="bbody">${html}</div><div class="btime">${ts()}</div></div>`;
-  ins(w);
-}
-function addOut(text){
-  const w=document.createElement('div'); w.className='bwrap out';
-  w.innerHTML=`<div class="bubble out"><div class="bbody">${esc(text)}</div><div class="btime">${ts()} <span class="tick">✓✓</span></div></div>`;
-  ins(w);
-}
-function enableIn(on,placeholder){
-  const f=document.getElementById('inp-ans'); const b=document.getElementById('sbtn');
-  f.disabled=!on; b.disabled=!on;
-  if(placeholder)f.placeholder=placeholder;
-  if(on)setTimeout(()=>f.focus(),100);
-}
-function showTyping(on){ document.getElementById('typing').classList.toggle('on',on); if(on)scrollBot(); }
-function setProg(r){ document.getElementById('prog').style.width=(r*100)+'%'; }
-function ins(el){ document.getElementById('msgs').appendChild(el); scrollBot(); }
-function scrollBot(){ const b=document.getElementById('msgs'); requestAnimationFrame(()=>b.scrollTop=b.scrollHeight); }
-function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('on'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('on'),3000); }
-function burst(ch){ const e=document.createElement('div'); e.className='eburst'; e.textContent=ch; e.style.left=(25+Math.random()*50)+'%'; e.style.bottom='80px'; document.getElementById('app').appendChild(e); setTimeout(()=>e.remove(),950); }
-
-const mb=document.getElementById('msgs');
-mb.addEventListener('scroll',()=>{ document.getElementById('sdn').classList.toggle('on',mb.scrollTop+mb.clientHeight<mb.scrollHeight-50); });
-document.getElementById('date-lbl').textContent=new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long'});
-</script>
+        socket.on('login_error', (msg) => {
+            document.getElementById('err-msg').textContent = msg;
+        });
+    </script>
 </body>
 </html>
