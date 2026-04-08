@@ -2,32 +2,37 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Admin - QuizChat</title>
+    <title>Admin Dashboard</title>
     <style>
-        body { font-family: sans-serif; display: flex; margin: 0; background: #f4f7f6; }
-        .sidebar { width: 220px; background: #075E54; color: white; height: 100vh; padding: 20px; }
-        .sidebar button { width: 100%; padding: 12px; margin-bottom: 10px; cursor: pointer; border: none; border-radius: 5px; text-align: left; }
-        .main { flex: 1; padding: 30px; }
-        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        body { font-family: 'Segoe UI', sans-serif; display: flex; margin: 0; background: #f4f7f6; }
+        .sidebar { width: 240px; background: #075E54; color: white; height: 100vh; padding: 20px; box-sizing: border-box; }
+        .sidebar h2 { font-size: 1.2rem; border-bottom: 1px solid #128C7E; padding-bottom: 10px; }
+        .sidebar button { width: 100%; padding: 12px; margin: 5px 0; border: none; background: none; color: white; text-align: left; cursor: pointer; border-radius: 5px; }
+        .sidebar button:hover { background: #128C7E; }
+        .main { flex: 1; padding: 30px; box-sizing: border-box; }
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        input { padding: 10px; margin-right: 10px; border: 1px solid #ddd; border-radius: 5px; width: 180px; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border-bottom: 1px solid #ddd; padding: 12px; text-align: left; }
-        .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; }
-        .modal-content { background:white; padding:25px; border-radius:10px; width:400px; }
-        input, select { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ddd; border-radius: 5px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+        .btn-add { background: #25D366; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
     </style>
 </head>
 <body>
     <div class="sidebar">
-        <h2>Quiz Admin</h2>
+        <h2>QuizChat Admin</h2>
         <button onclick="showPage('page-students')">Data Siswa</button>
         <button onclick="showPage('page-quizzes')">Manajemen Kuis</button>
     </div>
 
     <div class="main">
-        <div id="page-students" class="page">
-            <div style="display:flex; justify-content:space-between">
-                <h3>Daftar Siswa</h3>
-                <button onclick="openModal('modal-student')" style="background:#25D366; color:white; border:none; padding:10px 15px; border-radius:5px; cursor:pointer">+ Tambah Siswa</button>
+        <div id="page-students">
+            <h3>Daftar Siswa</h3>
+            <div class="card">
+                <h4>Tambah Siswa Baru</h4>
+                <input type="text" id="std-nis" placeholder="NIS">
+                <input type="text" id="std-name" placeholder="Nama Lengkap">
+                <input type="text" id="std-class" placeholder="Kelas (Misal: 5A)">
+                <button class="btn-add" onclick="saveStudent()">Simpan Siswa</button>
             </div>
             <div class="card">
                 <table>
@@ -37,37 +42,18 @@
             </div>
         </div>
 
-        <div id="page-quizzes" class="page" style="display:none">
-            <h3>Buat Kuis Baru</h3>
+        <div id="page-quizzes" style="display:none">
+            <h3>Buat Kuis</h3>
             <div class="card">
-                <label>Judul Kuis</label>
-                <input type="text" id="q-title" placeholder="Contoh: Ulangan Harian IPA">
-                <label>Untuk Jenjang Kelas (Hanya Angka)</label>
-                <input type="number" id="q-level" placeholder="Contoh: 5">
-                <p style="font-size:12px; color:gray">* Jika diisi 5, maka kelas 5A, 5B, 5C dst bisa mengerjakan.</p>
-                <button style="background:#075E54; color:white; padding:10px; border:none; border-radius:5px; cursor:pointer">Simpan Kuis</button>
+                <input type="text" id="q-title" placeholder="Judul Kuis" style="width:100%; margin-bottom:10px;">
+                <input type="number" id="q-level" placeholder="Untuk Tingkat Kelas (Contoh: 5)" style="width:100%;">
+                <p style="font-size:12px; color:gray">Jika diisi 5, maka siswa kelas 5A, 5B, 5C, dll bisa mengerjakan.</p>
+                <button class="btn-add">Simpan Kuis</button>
             </div>
         </div>
     </div>
 
-    <div id="modal-student" class="modal">
-        <div class="modal-content">
-            <h4>Tambah Siswa Baru</h4>
-            <input type="text" id="std-nis" placeholder="NIS (Contoh: 2024001)">
-            <input type="text" id="std-name" placeholder="Nama Lengkap">
-            <input type="text" id="std-class" placeholder="Kelas (Contoh: 5A)">
-            <button onclick="saveStudent()" style="background:#075E54; color:white; width:100%; border:none; padding:10px; margin-top:10px; border-radius:5px; cursor:pointer">Simpan Data</button>
-            <button onclick="closeModal('modal-student')" style="background:#ccc; width:100%; border:none; padding:10px; margin-top:5px; border-radius:5px; cursor:pointer">Batal</button>
-        </div>
-    </div>
-
     <script>
-        function showPage(id) {
-            document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-            document.getElementById(id).style.display = 'block';
-            if(id === 'page-students') loadStudents();
-        }
-
         async function loadStudents() {
             const res = await fetch('/api/students');
             const data = await res.json();
@@ -76,7 +62,7 @@
                     <td><b>${s.nis}</b></td>
                     <td>${s.name}</td>
                     <td>${s.class_name}</td>
-                    <td><button onclick="deleteStudent('${s.nis}')" style="color:red; border:none; background:none; cursor:pointer">Hapus</button></td>
+                    <td><button onclick="deleteStudent('${s.nis}')" style="color:red; background:none; border:none; cursor:pointer">Hapus</button></td>
                 </tr>
             `).join('');
         }
@@ -87,14 +73,23 @@
                 name: document.getElementById('std-name').value,
                 class_name: document.getElementById('std-class').value
             };
+            if(!body.nis || !body.name || !body.class_name) return alert('Lengkapi data!');
             await fetch('/api/students', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) });
-            closeModal('modal-student');
+            loadStudents();
+            document.querySelectorAll('input').forEach(i => i.value = '');
+        }
+
+        async function deleteStudent(nis) {
+            if(!confirm('Hapus siswa ini?')) return;
+            await fetch(`/api/students/${nis}`, { method: 'DELETE' });
             loadStudents();
         }
 
-        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        
+        function showPage(id) {
+            document.getElementById('page-students').style.display = id === 'page-students' ? 'block' : 'none';
+            document.getElementById('page-quizzes').style.display = id === 'page-quizzes' ? 'block' : 'none';
+        }
+
         loadStudents();
     </script>
 </body>
