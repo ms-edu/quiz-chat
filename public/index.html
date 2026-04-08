@@ -6,46 +6,43 @@
     <title>Siswa - QuizChat</title>
     <style>
         body { font-family: sans-serif; background: #E5DDD5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .container { background: white; width: 90%; max-width: 400px; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #075E54; margin-bottom: 25px; }
-        .fld { margin-bottom: 15px; }
-        label { font-size: 12px; color: #667781; font-weight: bold; display: block; margin-bottom: 5px; }
+        .container { background: white; width: 90%; max-width: 380px; padding: 25px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #075E54; margin-bottom: 20px; }
+        .field { margin-bottom: 15px; }
+        label { display: block; font-size: 12px; font-weight: bold; color: #666; margin-bottom: 5px; }
         select, input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        .btn { width: 100%; padding: 14px; background: #075E54; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .error { color: red; font-size: 12px; text-align: center; margin-top: 10px; }
-        .quiz-card { background: #f9f9f9; padding: 15px; border-left: 5px solid #25D366; margin-bottom: 10px; border-radius: 5px; cursor: pointer; }
+        .btn { width: 100%; padding: 14px; background: #075E54; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .err { color: red; font-size: 12px; text-align: center; margin-top: 10px; }
+        .quiz-item { background: #f0f0f0; padding: 15px; border-radius: 10px; margin-bottom: 10px; border-left: 5px solid #25D366; cursor: pointer; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div id="login-screen">
+        <div id="login-box">
             <h2>Masuk QuizChat</h2>
-            <div class="fld">
+            <div class="field">
                 <label>Pilih Kelas</label>
-                <select id="sel-class" onchange="loadNames()">
-                    <option value="">-- Pilih Kelas --</option>
-                    <option value="5A">5A</option>
-                    <option value="5B">5B</option>
-                    <option value="6A">6A</option>
+                <select id="sel-class" onchange="fetchNames()">
+                    <option value="">-- Memuat Kelas... --</option>
                 </select>
             </div>
-            <div class="fld">
+            <div class="field">
                 <label>Nama Anda</label>
                 <select id="sel-name" disabled>
-                    <option value="">Pilih kelas dulu...</option>
+                    <option value="">Pilih kelas dulu</option>
                 </select>
             </div>
-            <div class="fld">
-                <label>Masukkan NIS (Sebagai Password)</label>
+            <div class="field">
+                <label>Masukkan NIS (Password)</label>
                 <input type="password" id="inp-nis" placeholder="Nomor Induk Siswa">
             </div>
-            <button class="btn" onclick="doLogin()">Cek Daftar Kuis</button>
-            <div id="err-msg" class="error"></div>
+            <button class="btn" onclick="attemptLogin()">Verifikasi & Cari Kuis</button>
+            <div id="msg" class="err"></div>
         </div>
 
-        <div id="list-screen" style="display:none">
-            <h3 id="welcome-msg">Halo, Siswa</h3>
-            <p style="color:gray; font-size:14px">Kuis yang tersedia untuk tingkat kelas Anda:</p>
+        <div id="quiz-box" style="display:none">
+            <h3 id="welcome"></h3>
+            <p style="font-size: 14px; color: #555;">Kuis tersedia untuk tingkat Anda:</p>
             <div id="quiz-list"></div>
         </div>
     </div>
@@ -54,7 +51,21 @@
     <script>
         const socket = io();
 
-        function loadNames() {
+        // 1. Ambil kelas dari DB saat halaman dimuat
+        window.onload = () => socket.emit('get_classes');
+
+        socket.on('list_classes', (classes) => {
+            const sel = document.getElementById('sel-class');
+            if(classes.length === 0) {
+                sel.innerHTML = '<option value="">Data siswa kosong</option>';
+            } else {
+                sel.innerHTML = '<option value="">-- Pilih Kelas --</option>' + 
+                    classes.map(c => `<option value="${c}">${c}</option>`).join('');
+            }
+        });
+
+        // 2. Ambil Nama Siswa
+        function fetchNames() {
             const cls = document.getElementById('sel-class').value;
             if(!cls) return;
             socket.emit('get_students_by_class', cls);
@@ -67,40 +78,37 @@
                 students.map(s => `<option value="${s.nis}">${s.name}</option>`).join('');
         });
 
-        function doLogin() {
+        // 3. Login & Validasi
+        function attemptLogin() {
             const className = document.getElementById('sel-class').value;
             const nisInput = document.getElementById('inp-nis').value;
             const selectedNis = document.getElementById('sel-name').value;
 
-            if(nisInput !== selectedNis) {
-                document.getElementById('err-msg').textContent = "NIS salah atau tidak sesuai nama!";
+            if(!nisInput || nisInput !== selectedNis) {
+                document.getElementById('msg').textContent = "NIS salah atau tidak sesuai!";
                 return;
             }
-
             socket.emit('student_login', { nis: nisInput, className });
         }
 
         socket.on('login_success', ({ student, quizzes }) => {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('list-screen').style.display = 'block';
-            document.getElementById('welcome-msg').textContent = `Halo, ${student.name} (${student.class_name})`;
+            document.getElementById('login-box').style.display = 'none';
+            document.getElementById('quiz-box').style.display = 'block';
+            document.getElementById('welcome').textContent = `Halo, ${student.name}`;
 
-            const container = document.getElementById('quiz-list');
+            const list = document.getElementById('quiz-list');
             if(quizzes.length === 0) {
-                container.innerHTML = '<p style="text-align:center; color:red">Belum ada kuis untuk kelas Anda.</p>';
+                list.innerHTML = '<p style="color:red">Belum ada kuis untuk jenjang kelas Anda.</p>';
             } else {
-                container.innerHTML = quizzes.map(q => `
-                    <div class="quiz-card" onclick="alert('Memulai kuis: ${q.title}')">
-                        <div style="font-weight:bold">${q.title}</div>
-                        <div style="font-size:12px; color:gray">${q.description || ''}</div>
+                list.innerHTML = quizzes.map(q => `
+                    <div class="quiz-item">
+                        <strong>${q.title}</strong>
                     </div>
                 `).join('');
             }
         });
 
-        socket.on('login_error', (msg) => {
-            document.getElementById('err-msg').textContent = msg;
-        });
+        socket.on('login_error', (m) => document.getElementById('msg').textContent = m);
     </script>
 </body>
 </html>
